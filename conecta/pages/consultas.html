@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <title>Minhas consultas | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/paciente.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/exames.js" defer></script>
+  <script src="../js/paciente.js" defer></script>
+</head>
+<body data-page="consultas" data-roles="paciente">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head"><div><h1>Minhas consultas</h1><p>Acompanhe suas próximas consultas e o histórico de consultas anteriores.</p></div><div class="btn-row"><button type="button" class="btn btn-primary" id="btn-agendar"><i data-lucide="calendar-plus" aria-hidden="true"></i> Solicitar agendamento</button></div></div>
+    <section class="card" aria-label="Filtros de consultas">
+      <form id="filtros-consultas" class="filters" role="search">
+        <div class="field"><label for="c-especialidade">Especialidade</label><select class="select" id="c-especialidade" name="especialidade"><option value="">Todas</option></select></div>
+        <div class="field"><label for="c-unidade">Unidade</label><select class="select" id="c-unidade" name="unidade"><option value="">Todas</option></select></div>
+        <div class="field"><label for="c-status">Status</label><select class="select" id="c-status" name="status"><option value="">Todos</option><option value="Agendada">Agendada</option><option value="Confirmada">Confirmada</option><option value="Realizada">Realizada</option><option value="Cancelada">Cancelada</option><option value="Faltou">Faltou</option></select></div>
+        <div class="field"><span class="label" aria-hidden="true">&nbsp;</span><button type="reset" class="btn btn-ghost"><i data-lucide="rotate-ccw" aria-hidden="true"></i> Limpar filtros</button></div>
+      </form>
+    </section>
+    <section class="section" id="abas-consultas" aria-label="Consultas">
+      <div class="tabs" role="tablist" aria-label="Tipo de consulta">
+        <button type="button" class="tab" role="tab" data-aba="proximas" id="tab-proximas" aria-controls="painel-proximas"><i data-lucide="calendar-clock" aria-hidden="true"></i> Próximas <span class="tab-count" id="n-proximas">0</span></button>
+        <button type="button" class="tab" role="tab" data-aba="anteriores" id="tab-anteriores" aria-controls="painel-anteriores"><i data-lucide="calendar-check-2" aria-hidden="true"></i> Anteriores <span class="tab-count" id="n-anteriores">0</span></button>
+      </div>
+      <div data-painel="proximas" id="painel-proximas" role="tabpanel" aria-labelledby="tab-proximas"><div id="lista-proximas"></div></div>
+      <div data-painel="anteriores" id="painel-anteriores" role="tabpanel" aria-labelledby="tab-anteriores" class="hidden"><div id="lista-anteriores"></div></div>
+    </section>
+  </main>
+</body>
+</html>

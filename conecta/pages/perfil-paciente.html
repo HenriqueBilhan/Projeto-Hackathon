@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <title>Perfil do paciente | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/paciente.css">
+  <link rel="stylesheet" href="../css/medico.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/exames.js" defer></script>
+  <script src="../js/paciente.js" defer></script>
+  <script src="../js/medico.js" defer></script>
+</head>
+<body data-page="perfil" data-roles="paciente,medico">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <!-- Visão do PACIENTE: Meu perfil -->
+    <div id="visao-paciente" class="hidden">
+      <section class="profile-head" id="perfil-cabecalho" aria-label="Identificação"></section>
+      <div class="grid grid-main">
+        <section class="card" aria-labelledby="t-dados"><div class="card-header"><h2 id="t-dados"><i data-lucide="id-card" aria-hidden="true"></i> Dados pessoais e cadastrais</h2></div><div id="perfil-dados"></div></section>
+        <div class="stack">
+          <section class="card" aria-labelledby="t-clin"><div class="card-header"><h2 id="t-clin"><i data-lucide="heart-pulse" aria-hidden="true"></i> Informações de saúde</h2></div><div id="perfil-clinico"></div></section>
+          <section class="card" aria-labelledby="t-priv"><div class="card-header"><h2 id="t-priv"><i data-lucide="lock" aria-hidden="true"></i> Privacidade e compartilhamento</h2></div><div id="perfil-privacidade"></div></section>
+        </div>
+      </div>
+      <section class="card section" id="acessos" aria-labelledby="t-aces"><div class="card-header"><h2 id="t-aces"><i data-lucide="scroll-text" aria-hidden="true"></i> Quem acessou meu prontuário</h2><span class="small muted">Registro de auditoria (LGPD)</span></div><div id="perfil-acessos"></div></section>
+    </div>
+
+    <!-- Visão do PROFISSIONAL: perfil clínico completo (prontuário integrado) -->
+    <div id="visao-medico" class="hidden">
+      <p class="access-note"><i data-lucide="shield-check" aria-hidden="true"></i> Acesso restrito a profissionais autorizados — este acesso foi registrado: <strong id="pc-nome-acesso"></strong></p>
+      <section class="pc-head" id="pc-cabecalho" aria-label="Dados pessoais do paciente"></section>
+      <div id="pc-alergias"></div>
+      <div class="grid grid-main">
+        <section class="card" aria-labelledby="t-pctl">
+          <div class="card-header"><h2 id="t-pctl"><i data-lucide="git-commit-vertical" aria-hidden="true"></i> Linha do tempo clínica integrada</h2>
+            <div class="field"><label for="pc-filtro" class="sr-only">Filtrar por tipo de unidade</label><select class="select" id="pc-filtro"><option value="">Todas as unidades</option><option>UBS</option><option>UPA</option><option>Hospital</option><option>Laboratório</option><option>Clínica</option></select></div>
+          </div>
+          <p class="small muted mb-0">Unidades que contribuíram com este histórico:</p>
+          <div id="pc-unidades" class="mt-2"></div>
+          <div id="pc-timeline" class="mt-2"></div>
+        </section>
+        <div class="stack">
+          <section class="card info-card" aria-labelledby="t-cr"><h3 id="t-cr"><i data-lucide="activity" aria-hidden="true"></i> Doenças crônicas</h3><div id="pc-cronicas"></div></section>
+          <section class="card info-card" aria-labelledby="t-md"><h3 id="t-md"><i data-lucide="pill" aria-hidden="true"></i> Medicamentos em uso</h3><div id="pc-medicamentos"></div></section>
+          <section class="card info-card" aria-labelledby="t-dg"><h3 id="t-dg"><i data-lucide="clipboard-check" aria-hidden="true"></i> Diagnósticos anteriores</h3><div id="pc-diagnosticos"></div></section>
+          <section class="card info-card" aria-labelledby="t-in"><h3 id="t-in"><i data-lucide="bed-double" aria-hidden="true"></i> Histórico de internações</h3><div id="pc-internacoes"></div></section>
+          <section class="card info-card" aria-labelledby="t-en"><h3 id="t-en"><i data-lucide="send" aria-hidden="true"></i> Encaminhamentos</h3><div id="pc-encaminhamentos"></div></section>
+        </div>
+      </div>
+      <section class="card section" aria-labelledby="t-pcex"><div class="card-header"><h2 id="t-pcex"><i data-lucide="flask-conical" aria-hidden="true"></i> Exames realizados</h2></div><div id="pc-exames"></div></section>
+    </div>
+  </main>
+</body>
+</html>

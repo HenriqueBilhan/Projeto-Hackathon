@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <title>Pacientes | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/administrador.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/administrador.js" defer></script>
+</head>
+<body data-page="pacientes" data-roles="admin">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head"><div><h1>Pacientes</h1><p>Cadastros de pacientes na rede (somente dados cadastrais, com documentos mascarados).</p></div><div class="btn-row"><button type="button" class="btn btn-outline" id="pac-exportar"><i data-lucide="download" aria-hidden="true"></i> Exportar CSV</button></div></div>
+    <div class="alert alert-alerta"><i data-lucide="eye-off" aria-hidden="true"></i><span>O perfil administrador não tem acesso ao conteúdo clínico dos prontuários. Informações de saúde são restritas a profissionais autorizados.</span></div>
+    <section class="card" aria-labelledby="t-pl"><div class="card-header"><h2 id="t-pl"><i data-lucide="users" aria-hidden="true"></i> Pacientes cadastrados</h2></div>
+      <div class="filters">
+        <div class="field"><label for="pac-busca">Buscar</label><div class="input-icon"><i data-lucide="search" aria-hidden="true"></i><input class="input" id="pac-busca" type="search" placeholder="Nome, CPF ou CNS"></div></div>
+        <div class="field"><label for="pac-unidade">Unidade de referência</label><select class="select" id="pac-unidade"><option value="">Todas</option></select></div>
+      </div>
+      <p class="filter-count" id="pac-contagem" aria-live="polite"></p>
+      <div id="pac-tabela"></div>
+    </section>
+  </main>
+</body>
+</html>

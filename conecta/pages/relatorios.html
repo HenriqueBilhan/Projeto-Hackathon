@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <title>Relatórios | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/administrador.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/administrador.js" defer></script>
+</head>
+<body data-page="relatorios" data-roles="admin">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head"><div><h1>Relatórios</h1><p>Indicadores visuais de atendimentos, exames e pacientes na rede (dados demonstrativos).</p></div><div class="btn-row no-print"><div class="field"><label for="rel-periodo" class="sr-only">Período</label><select class="select" id="rel-periodo"><option value="6">Últimos 6 meses</option><option value="3">Últimos 3 meses</option></select></div><button type="button" class="btn btn-outline" id="rel-imprimir"><i data-lucide="printer" aria-hidden="true"></i> Imprimir</button><button type="button" class="btn btn-primary" id="rel-csv"><i data-lucide="download" aria-hidden="true"></i> Exportar CSV</button></div></div>
+    <section aria-label="Totais do período"><div class="grid grid-4" id="rel-kpis"></div></section>
+    <div class="grid grid-2 section">
+      <section class="card" aria-labelledby="t-r1"><div class="card-header"><h2 id="t-r1"><i data-lucide="building-2" aria-hidden="true"></i> Atendimentos por unidade</h2></div><div class="chart-box lg"><canvas id="r-unidades" role="img" aria-label="Barras: atendimentos por unidade no período"></canvas></div></section>
+      <section class="card" aria-labelledby="t-r2"><div class="card-header"><h2 id="t-r2"><i data-lucide="trending-up" aria-hidden="true"></i> Volume de atendimentos por período</h2></div><div class="chart-box lg"><canvas id="r-volume" role="img" aria-label="Linhas: atendimentos, exames e pacientes por mês"></canvas></div></section>
+    </div>
+    <div class="grid grid-2 section">
+      <section class="card" aria-labelledby="t-r3"><div class="card-header"><h2 id="t-r3"><i data-lucide="flask-conical" aria-hidden="true"></i> Exames realizados</h2></div><div class="chart-box "><canvas id="r-exames" role="img" aria-label="Barras: exames realizados por mês"></canvas></div></section>
+      <section class="card" aria-labelledby="t-r4"><div class="card-header"><h2 id="t-r4"><i data-lucide="users" aria-hidden="true"></i> Pacientes atendidos</h2></div><div class="chart-box "><canvas id="r-pacientes" role="img" aria-label="Linha: pacientes atendidos por mês"></canvas></div></section>
+    </div>
+    <div class="grid grid-2 section">
+      <section class="card" aria-labelledby="t-r5"><div class="card-header"><h2 id="t-r5"><i data-lucide="pie-chart" aria-hidden="true"></i> Distribuição por tipo de unidade</h2></div><div class="chart-box "><canvas id="r-tipos" role="img" aria-label="Rosca: atendimentos por tipo de unidade"></canvas></div></section>
+      <section class="card" aria-labelledby="t-r6"><div class="card-header"><h2 id="t-r6"><i data-lucide="layers" aria-hidden="true"></i> Natureza dos atendimentos (%)</h2></div><div class="chart-box "><canvas id="r-natureza" role="img" aria-label="Pizza: natureza dos atendimentos"></canvas></div></section>
+    </div>
+  </main>
+</body>
+</html>

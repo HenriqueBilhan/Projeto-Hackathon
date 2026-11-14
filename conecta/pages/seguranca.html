@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <title>Segurança e privacidade | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/administrador.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/administrador.js" defer></script>
+</head>
+<body data-page="seguranca" data-roles="admin" data-aba-padrao="acesso">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head"><div><h1>Segurança e privacidade</h1><p>Controle de acesso por perfil, auditoria de acessos aos prontuários e proteção de dados pessoais sensíveis (LGPD).</p></div></div>
+    <section id="abas-seg" aria-label="Segurança">
+      <div class="tabs" role="tablist" aria-label="Seções de segurança">
+        <button type="button" class="tab" role="tab" data-aba="auditoria" id="tab-auditoria" aria-controls="painel-auditoria"><i data-lucide="scroll-text" aria-hidden="true"></i> Auditoria</button><button type="button" class="tab" role="tab" data-aba="acesso" id="tab-acesso" aria-controls="painel-acesso"><i data-lucide="shield-check" aria-hidden="true"></i> Controle de acesso</button><button type="button" class="tab" role="tab" data-aba="compartilhamento" id="tab-compartilhamento" aria-controls="painel-compartilhamento"><i data-lucide="share-2" aria-hidden="true"></i> Compartilhamento</button><button type="button" class="tab" role="tab" data-aba="privacidade" id="tab-privacidade" aria-controls="painel-privacidade"><i data-lucide="eye-off" aria-hidden="true"></i> Privacidade (LGPD)</button><button type="button" class="tab" role="tab" data-aba="config" id="tab-config" aria-controls="painel-config"><i data-lucide="settings" aria-hidden="true"></i> Configurações</button>
+      </div>
+      <div id="painel-seg">
+        <div data-painel="auditoria" id="painel-auditoria" role="tabpanel" aria-labelledby="tab-auditoria" class="hidden">
+          <section class="card" aria-labelledby="t-au">
+            <div class="card-header"><h2 id="t-au"><i data-lucide="scroll-text" aria-hidden="true"></i> Registro de acessos aos prontuários</h2><button type="button" class="btn btn-outline btn-sm" id="au-exportar"><i data-lucide="download" aria-hidden="true"></i> Exportar CSV</button></div>
+            <form id="filtros-auditoria" class="filters" role="search">
+              <div class="field"><label for="au-busca">Profissional ou paciente</label><input class="input" id="au-busca" name="busca" type="text" placeholder="Buscar por nome"><span class="field-error" data-erro-de="au-busca"></span></div>
+              <div class="field"><label for="au-operacao">Operação</label><select class="select" id="au-operacao" name="operacao"><option value="">Todas</option></select></div>
+              <div class="field"><label for="au-unidade">Unidade de origem</label><select class="select" id="au-unidade" name="unidade"><option value="">Todas</option></select></div>
+              <div class="field"><label for="au-data">Data</label><input class="input" id="au-data" name="data" type="date"><span class="field-error" data-erro-de="au-data"></span></div>
+              <div class="field"><span class="label" aria-hidden="true">&nbsp;</span><button type="reset" class="btn btn-ghost"><i data-lucide="rotate-ccw" aria-hidden="true"></i> Limpar filtros</button></div>
+            </form>
+            <p class="filter-count" id="au-contagem" aria-live="polite"></p>
+            <div id="au-tabela"></div>
+          </section>
+        </div>
+        <div data-painel="acesso" id="painel-acesso" role="tabpanel" aria-labelledby="tab-acesso" class="hidden">
+          <div class="role-cards" id="ac-resumo"></div>
+          <section class="card" aria-labelledby="t-mx">
+            <div class="card-header"><h2 id="t-mx"><i data-lucide="key-round" aria-hidden="true"></i> Permissões por perfil</h2><div class="btn-row"><button type="button" class="btn btn-ghost btn-sm" id="ac-restaurar"><i data-lucide="rotate-ccw" aria-hidden="true"></i> Desfazer</button><button type="button" class="btn btn-primary btn-sm" id="ac-salvar"><i data-lucide="save" aria-hidden="true"></i> Salvar permissões</button></div></div>
+            <p class="small muted">O acesso a informações clínicas é restrito a profissionais devidamente autorizados e vinculados a unidades integradas. Toda alteração é auditada.</p>
+            <div id="ac-matriz" class="perm-wrap"></div>
+          </section>
+        </div>
+        <div data-painel="compartilhamento" id="painel-compartilhamento" role="tabpanel" aria-labelledby="tab-compartilhamento" class="hidden">
+          <div class="grid grid-2">
+            <section class="card" aria-labelledby="t-cp1"><div class="card-header"><h2 id="t-cp1"><i data-lucide="share-2" aria-hidden="true"></i> Regras de compartilhamento</h2></div><div id="cp-regras"></div></section>
+            <section class="card" aria-labelledby="t-cp2"><div class="card-header"><h2 id="t-cp2"><i data-lucide="building-2" aria-hidden="true"></i> Compartilhamento por unidade</h2></div><div id="cp-unidades"></div></section>
+          </div>
+        </div>
+        <div data-painel="privacidade" id="painel-privacidade" role="tabpanel" aria-labelledby="tab-privacidade" class="hidden">
+          <div class="grid grid-2">
+            <section class="card" aria-labelledby="t-pv1"><div class="card-header"><h2 id="t-pv1"><i data-lucide="lock" aria-hidden="true"></i> Proteção de informações pessoais</h2></div>
+              <div id="pv-regras"></div>
+              <ul class="lgpd-list mt-3">
+                <li><i data-lucide="scale" aria-hidden="true"></i><span><strong>Base legal:</strong> tutela da saúde, por profissionais de saúde (LGPD, art. 11, II, “f”).</span></li>
+                <li><i data-lucide="target" aria-hidden="true"></i><span><strong>Finalidade e necessidade:</strong> cada perfil vê apenas o mínimo necessário à sua função.</span></li>
+                <li><i data-lucide="scroll-text" aria-hidden="true"></i><span><strong>Rastreabilidade:</strong> todo acesso é registrado com usuário, unidade, data e operação.</span></li>
+                <li><i data-lucide="user-check" aria-hidden="true"></i><span><strong>Direitos do titular:</strong> o paciente consulta seus dados e quem os acessou.</span></li>
+              </ul>
+            </section>
+            <section class="card" aria-labelledby="t-pv2"><div class="card-header"><h2 id="t-pv2"><i data-lucide="eye-off" aria-hidden="true"></i> Mascaramento de CPF e CNS</h2></div><div id="pv-exemplo" class="table-wrap"></div>
+              <div class="alert alert-info mt-3 mb-0"><i data-lucide="info" aria-hidden="true"></i><span>Nenhum dado real é armazenado: o protótipo usa apenas dados fictícios no navegador.</span></div></section>
+          </div>
+        </div>
+        <div data-painel="config" id="painel-config" role="tabpanel" aria-labelledby="tab-config" class="hidden">
+          <section class="card" aria-labelledby="t-cf"><div class="card-header"><h2 id="t-cf"><i data-lucide="settings" aria-hidden="true"></i> Configurações da plataforma</h2></div>
+            <div id="cf-regras"></div>
+            <div class="form-grid mt-2"><div class="field"><label for="cf-sessao">Encerrar sessão por inatividade</label><select class="select" id="cf-sessao"><option value="15">Após 15 minutos</option><option value="30">Após 30 minutos</option><option value="60">Após 60 minutos</option></select></div></div>
+            <div class="alert alert-alerta mt-3"><i data-lucide="database" aria-hidden="true"></i><span>Os dados de demonstração ficam salvos no navegador (LocalStorage). Você pode restaurá-los a qualquer momento.</span></div>
+            <button type="button" class="btn btn-danger" id="cf-reset"><i data-lucide="rotate-ccw" aria-hidden="true"></i> Restaurar dados de demonstração</button>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

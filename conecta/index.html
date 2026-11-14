@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública. Seu histórico médico acompanha você em UBSs, UPAs, hospitais e laboratórios.">
+  <title>Conecta | Sua saúde integrada, seu histórico sempre com você</title>
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="stylesheet" href="css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/portal.js" defer></script>
+</head>
+<body data-page="home" class="portal">
+  <a href="#conteudo" class="skip-link">Pular para o conteúdo</a>
+
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando Conecta">
+    <span class="logo-crop"><img src="assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Conectando sua saúde…</p>
+  </div>
+
+  <!-- ===== Barra de utilidades ===== -->
+  <div class="utility-bar">
+    <div class="wrap">
+      <nav class="utility-links" aria-label="Públicos">
+        <a href="#pacientes">Para pacientes</a>
+        <a href="#profissionais">Para profissionais</a>
+        <a href="#gestores">Para gestores</a>
+      </nav>
+      <div class="utility-tools">
+        <span class="hide-sm">Acessibilidade:</span>
+        <button type="button" data-fonte="-1" aria-label="Diminuir tamanho do texto">A-</button>
+        <button type="button" data-fonte="0" aria-label="Tamanho padrão do texto">A</button>
+        <button type="button" data-fonte="1" aria-label="Aumentar tamanho do texto">A+</button>
+        <button type="button" id="btn-contraste" aria-pressed="false"><i data-lucide="contrast" aria-hidden="true"></i><span class="hide-sm">Alto contraste</span></button>
+        <a href="#contato" class="hide-sm">Ouvidoria</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Cabeçalho institucional ===== -->
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a href="index.html" class="site-logo" aria-label="Conecta — página inicial"><span class="logo-crop"><img src="assets/img/logo-conecta.png" alt="Conecta"></span></a>
+      <nav class="main-nav" id="main-nav" aria-label="Menu principal">
+        <ul>
+          <li><a href="#inicio" aria-current="page">Início</a></li>
+          <li><a href="#como-funciona">Como funciona</a></li>
+          <li><a href="#unidades">Unidades de saúde</a></li>
+          <li><a href="#orientacoes">Orientações</a></li>
+          <li><a href="#contato">Ajuda</a></li>
+        </ul>
+        <div class="nav-actions-mobile">
+          <a class="btn btn-outline btn-block" href="login.html?perfil=profissional">Sou profissional</a>
+          <a class="btn btn-primary btn-block" href="login.html">Área do paciente</a>
+        </div>
+      </nav>
+      <div class="header-actions">
+        <button type="button" class="btn-icon" id="btn-busca" aria-label="Buscar unidade" aria-expanded="false" aria-controls="busca-topo"><i data-lucide="search" aria-hidden="true"></i></button>
+        <a class="btn btn-outline" href="login.html?perfil=profissional" id="btn-prof"><i data-lucide="stethoscope" aria-hidden="true"></i> Sou profissional</a>
+        <a class="btn btn-primary" href="login.html" id="btn-area"><i data-lucide="user-round" aria-hidden="true"></i> Área do paciente</a>
+        <button type="button" class="btn-icon menu-btn" id="btn-menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="main-nav"><i data-lucide="menu" aria-hidden="true"></i></button>
+      </div>
+    </div>
+    <form class="header-search hidden" id="busca-topo" role="search">
+      <div class="wrap">
+        <label for="busca-topo-input" class="sr-only">Buscar unidade de saúde</label>
+        <div class="input-icon"><i data-lucide="search" aria-hidden="true"></i><input class="input" id="busca-topo-input" type="search" placeholder="Busque uma unidade por nome, bairro ou tipo (UBS, UPA…)"></div>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+      </div>
+    </form>
+  </header>
+
+  <main id="conteudo" tabindex="-1">
+    <!-- ===== Banner rotativo ===== -->
+    <section class="hero" id="inicio" aria-roledescription="carrossel" aria-label="Destaques">
+      <div class="slides">
+        <article class="slide slide-1 ativo" aria-roledescription="slide" aria-label="1 de 3">
+          <div class="wrap slide-grid">
+            <div class="slide-text">
+              <span class="slide-tag">Saúde pública integrada</span>
+              <h1>Seu histórico de saúde acompanha você em toda a rede.</h1>
+              <p>Atendimentos, exames e receitas de UBSs, UPAs, hospitais e laboratórios reunidos em um só lugar, com acesso seguro.</p>
+              <div class="btn-row"><a class="btn btn-light" href="login.html">Acessar minha área</a><a class="btn btn-ghost-light" href="#como-funciona">Como funciona</a></div>
+            </div>
+            <div class="slide-art"><img src="assets/icons/ilustracao-rede.svg" alt="Prontuário do paciente conectado a UBS, UPA, hospital, laboratório e clínica"></div>
+          </div>
+        </article>
+        <article class="slide slide-2" aria-roledescription="slide" aria-label="2 de 3" aria-hidden="true">
+          <div class="wrap slide-grid">
+            <div class="slide-text">
+              <span class="slide-tag">Para o paciente</span>
+              <h2>Resultados de exames e receitas na palma da mão.</h2>
+              <p>Consulte resultados, baixe laudos em PDF, acompanhe consultas e veja quem acessou seu prontuário.</p>
+              <div class="btn-row"><a class="btn btn-primary" href="login.html?destino=exames.html" tabindex="-1">Ver meus exames</a></div>
+            </div>
+            <div class="slide-art"><img src="assets/icons/ilustracao-app.svg" alt="Celular exibindo a linha do tempo de saúde"></div>
+          </div>
+        </article>
+        <article class="slide slide-3" aria-roledescription="slide" aria-label="3 de 3" aria-hidden="true">
+          <div class="wrap slide-grid">
+            <div class="slide-text">
+              <span class="slide-tag">Privacidade e LGPD</span>
+              <h2>Só quem cuida de você acessa seus dados.</h2>
+              <p>Acesso restrito a profissionais autorizados, documentos mascarados e auditoria de cada consulta ao prontuário.</p>
+              <div class="btn-row"><button type="button" class="btn btn-light" data-privacidade tabindex="-1">Conheça nossa política</button></div>
+            </div>
+            <div class="slide-art"><img src="assets/icons/ilustracao-seguranca.svg" alt="Escudo de proteção sobre um prontuário"></div>
+          </div>
+        </article>
+      </div>
+      <div class="hero-controls wrap">
+        <button type="button" class="hero-arrow" id="slide-ant" aria-label="Destaque anterior"><i data-lucide="chevron-left" aria-hidden="true"></i></button>
+        <div class="hero-dots" role="group" aria-label="Escolher destaque">
+          <button type="button" data-slide="0" aria-label="Destaque 1" aria-current="true"></button>
+          <button type="button" data-slide="1" aria-label="Destaque 2"></button>
+          <button type="button" data-slide="2" aria-label="Destaque 3"></button>
+        </div>
+        <button type="button" class="hero-arrow" id="slide-prox" aria-label="Próximo destaque"><i data-lucide="chevron-right" aria-hidden="true"></i></button>
+        <button type="button" class="hero-arrow" id="slide-pausa" aria-label="Pausar rotação dos destaques"><i data-lucide="pause" aria-hidden="true"></i></button>
+      </div>
+    </section>
+
+    <!-- ===== Acesso rápido ===== -->
+    <section class="quick wrap" aria-labelledby="t-rapido">
+      <h2 id="t-rapido" class="sr-only">Acesso rápido</h2>
+      <ul class="quick-grid">
+        <li><a href="login.html?destino=exames.html"><span class="q-ico"><i data-lucide="flask-conical" aria-hidden="true"></i></span>Resultados de exames</a></li>
+        <li><a href="login.html?destino=consultas.html"><span class="q-ico"><i data-lucide="calendar-days" aria-hidden="true"></i></span>Minhas consultas</a></li>
+        <li><a href="login.html?destino=receitas.html"><span class="q-ico"><i data-lucide="file-text" aria-hidden="true"></i></span>Receitas e medicamentos</a></li>
+        <li><a href="login.html?destino=historico.html"><span class="q-ico"><i data-lucide="history" aria-hidden="true"></i></span>Histórico médico</a></li>
+        <li><a href="#unidades"><span class="q-ico"><i data-lucide="map-pin" aria-hidden="true"></i></span>Encontrar unidade</a></li>
+        <li><a href="#contato"><span class="q-ico"><i data-lucide="life-buoy" aria-hidden="true"></i></span>Ajuda e suporte</a></li>
+      </ul>
+    </section>
+
+    <!-- ===== Números da rede ===== -->
+    <section class="numbers wrap" aria-label="A rede em números">
+      <div id="numeros" class="numbers-grid"></div>
+      <p class="numbers-note">Números demonstrativos do protótipo.</p>
+    </section>
+
+    <!-- ===== Públicos ===== -->
+    <section class="section-block" aria-labelledby="t-publicos">
+      <div class="wrap">
+        <header class="section-title">
+          <span class="eyebrow">Para cada pessoa, o acesso certo</span>
+          <h2 id="t-publicos">Quem usa o Conecta</h2>
+        </header>
+        <div class="audience-grid">
+          <article class="audience" id="pacientes">
+            <span class="aud-ico"><i data-lucide="heart-pulse" aria-hidden="true"></i></span>
+            <h3>Pacientes</h3>
+            <ul class="checklist">
+              <li>Histórico de atendimentos em uma linha do tempo</li>
+              <li>Resultados de exames e laudos em PDF</li>
+              <li>Receitas, medicamentos e próximas consultas</li>
+              <li>Aviso sempre que seu prontuário for acessado</li>
+            </ul>
+            <a class="link-arrow" href="login.html">Entrar como paciente <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+          </article>
+          <article class="audience" id="profissionais">
+            <span class="aud-ico"><i data-lucide="stethoscope" aria-hidden="true"></i></span>
+            <h3>Profissionais de saúde</h3>
+            <ul class="checklist">
+              <li>Busca de pacientes por CPF, nome ou CNS</li>
+              <li>Prontuário com registros de outras unidades</li>
+              <li>Registro de atendimento, exames e prescrições</li>
+              <li>Alerta de alergias antes de prescrever</li>
+            </ul>
+            <a class="link-arrow" href="login.html?perfil=profissional">Entrar como profissional <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+          </article>
+          <article class="audience" id="gestores">
+            <span class="aud-ico"><i data-lucide="bar-chart-3" aria-hidden="true"></i></span>
+            <h3>Gestores da rede</h3>
+            <ul class="checklist">
+              <li>Indicadores de atendimentos e exames</li>
+              <li>Cadastro de profissionais e unidades</li>
+              <li>Auditoria completa de acessos</li>
+              <li>Controle de permissões por perfil</li>
+            </ul>
+            <a class="link-arrow" href="login.html?perfil=profissional">Acessar a gestão <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Como funciona ===== -->
+    <section class="section-block alt" id="como-funciona" aria-labelledby="t-como">
+      <div class="wrap">
+        <header class="section-title">
+          <span class="eyebrow">Continuidade do cuidado</span>
+          <h2 id="t-como">Como o seu histórico chega até a próxima consulta</h2>
+          <p>Um exemplo real do dia a dia da rede pública, com dados fictícios.</p>
+        </header>
+        <ol class="journey">
+          <li><span class="j-n">1</span><span class="j-ico"><i data-lucide="siren" aria-hidden="true"></i></span><h3>Atendimento na UPA</h3><p>Maria chega à UPA com febre. A médica vê no Conecta que ela tem alergia a dipirona.</p></li>
+          <li><span class="j-n">2</span><span class="j-ico"><i data-lucide="file-plus-2" aria-hidden="true"></i></span><h3>Registro seguro</h3><p>Diagnóstico, exames e receita entram no histórico da paciente, com a unidade de origem.</p></li>
+          <li><span class="j-n">3</span><span class="j-ico"><i data-lucide="house-plus" aria-hidden="true"></i></span><h3>Retorno na UBS</h3><p>Dias depois, o médico da UBS consulta o atendimento da UPA e os exames, sem repetir nada.</p></li>
+          <li><span class="j-n">4</span><span class="j-ico"><i data-lucide="smartphone" aria-hidden="true"></i></span><h3>Paciente acompanha</h3><p>Maria vê tudo na área do paciente, incluindo quem acessou seu prontuário.</p></li>
+        </ol>
+        <div class="center"><a class="btn btn-primary" href="login.html"><i data-lucide="play" aria-hidden="true"></i> Experimentar o protótipo</a></div>
+      </div>
+    </section>
+
+    <!-- ===== Unidades ===== -->
+    <section class="section-block" id="unidades" aria-labelledby="t-unid">
+      <div class="wrap">
+        <header class="section-title row">
+          <div><span class="eyebrow">Rede integrada</span><h2 id="t-unid">Encontre uma unidade de saúde</h2></div>
+        </header>
+        <div class="finder">
+          <div class="field"><label for="un-termo">Nome ou bairro</label><div class="input-icon"><i data-lucide="search" aria-hidden="true"></i><input class="input" id="un-termo" type="search" placeholder="Ex.: Jardim das Flores"></div></div>
+          <div class="chips" id="un-tipos" role="group" aria-label="Tipo de unidade"></div>
+        </div>
+        <p class="filter-count" id="un-contagem" aria-live="polite"></p>
+        <div class="unit-list" id="un-lista"></div>
+      </div>
+    </section>
+
+    <!-- ===== Orientações ===== -->
+    <section class="section-block alt" id="orientacoes" aria-labelledby="t-ori">
+      <div class="wrap">
+        <header class="section-title"><span class="eyebrow">Fique por dentro</span><h2 id="t-ori">Orientações e novidades</h2></header>
+        <div class="news-grid" id="noticias"></div>
+      </div>
+    </section>
+
+    <!-- ===== Faixa de privacidade ===== -->
+    <section class="privacy-band" aria-labelledby="t-priv">
+      <div class="wrap band-row">
+        <span class="band-ico"><i data-lucide="shield-check" aria-hidden="true"></i></span>
+        <div><h2 id="t-priv">Seus dados protegidos pela LGPD</h2><p>Acesso apenas por profissionais autorizados, documentos mascarados e registro de cada consulta ao prontuário.</p></div>
+        <button type="button" class="btn btn-light" data-privacidade>Política de privacidade</button>
+      </div>
+    </section>
+
+    <!-- ===== Ajuda e contato ===== -->
+    <section class="section-block" id="contato" aria-labelledby="t-ajuda">
+      <div class="wrap help-grid">
+        <div>
+          <header class="section-title"><span class="eyebrow">Ajuda</span><h2 id="t-ajuda">Perguntas frequentes</h2></header>
+          <div class="faq">
+            <details><summary>Preciso me cadastrar para usar o Conecta?</summary><p>Sim. Na Área do paciente, clique em “Cadastre-se como paciente” e informe CPF, CNS e data de nascimento.</p></details>
+            <details><summary>Qualquer profissional pode ver meu histórico?</summary><p>Não. Apenas profissionais autorizados e vinculados a unidades integradas, durante o atendimento. Cada acesso fica registrado.</p></details>
+            <details><summary>Como vejo o resultado de um exame?</summary><p>Entre na Área do paciente e abra “Meus exames”. Resultados liberados podem ser visualizados e salvos em PDF.</p></details>
+            <details><summary>O Conecta substitui o Cartão SUS?</summary><p>Não. O Conecta é um protótipo de integração de informações e usa o número do CNS apenas para identificar o paciente.</p></details>
+          </div>
+        </div>
+        <aside class="contact-card" aria-labelledby="t-fale">
+          <h2 id="t-fale">Fale com a gente</h2>
+          <ul class="contact-list">
+            <li><i data-lucide="phone" aria-hidden="true"></i><span><strong>0800 000 0000</strong>Central fictícia · seg. a sex., 8h às 18h</span></li>
+            <li><i data-lucide="mail" aria-hidden="true"></i><span><strong>contato@conecta.demo</strong>Resposta em até 2 dias úteis</span></li>
+          </ul>
+          <form id="form-contato" class="form-grid" novalidate>
+            <div class="field span-all"><label for="ct-nome">Nome</label><input class="input" id="ct-nome" name="nome" required autocomplete="name"><span class="field-error" data-erro-de="ct-nome"></span></div>
+            <div class="field span-all"><label for="ct-email">E-mail</label><input class="input" id="ct-email" name="email" type="email" required autocomplete="email"><span class="field-error" data-erro-de="ct-email"></span></div>
+            <div class="field span-all"><label for="ct-msg">Mensagem</label><textarea class="textarea" id="ct-msg" name="mensagem" rows="3" required></textarea><span class="field-error" data-erro-de="ct-msg"></span></div>
+            <div class="span-all"><button type="submit" class="btn btn-primary btn-block"><i data-lucide="send" aria-hidden="true"></i> Enviar mensagem</button></div>
+          </form>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Rodapé ===== -->
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <span class="footer-logo"><span class="logo-crop"><img src="assets/img/logo-conecta.png" alt="Conecta"></span></span>
+        <p>Conecta: sua saúde integrada, seu histórico sempre com você.</p>
+      </div>
+      <nav aria-labelledby="f1"><h2 id="f1">Serviços</h2><ul>
+        <li><a href="login.html?destino=exames.html">Resultados de exames</a></li>
+        <li><a href="login.html?destino=consultas.html">Consultas</a></li>
+        <li><a href="login.html?destino=historico.html">Histórico médico</a></li>
+        <li><a href="#unidades">Unidades de saúde</a></li>
+      </ul></nav>
+      <nav aria-labelledby="f2"><h2 id="f2">Acesso</h2><ul>
+        <li><a href="login.html">Área do paciente</a></li>
+        <li><a href="login.html?perfil=profissional">Profissionais de saúde</a></li>
+        <li><a href="login.html?perfil=profissional">Gestão da rede</a></li>
+        <li><a href="#como-funciona">Como funciona</a></li>
+      </ul></nav>
+      <div><h2>Atendimento</h2><ul class="footer-contact">
+        <li><i data-lucide="phone" aria-hidden="true"></i> 0800 000 0000</li>
+        <li><i data-lucide="mail" aria-hidden="true"></i> contato@conecta.demo</li>
+        <li><i data-lucide="clock" aria-hidden="true"></i> Seg. a sex., 8h às 18h</li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="wrap">
+        <span>© 2026 Conecta · Protótipo com dados fictícios. Integração com o SUS simulada.</span>
+        <span><button type="button" class="link-light" data-privacidade>Política de privacidade</button> · <button type="button" class="link-light" id="btn-reset">Restaurar dados de demonstração</button></span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

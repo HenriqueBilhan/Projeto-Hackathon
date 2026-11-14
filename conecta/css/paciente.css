@@ -1,0 +1,113 @@
+/* ==========================================================================
+   CONECTA — Área do paciente
+   Componentes clínicos compartilhados (detalhes, sinais vitais, receitas),
+   consultas, medicamentos, perfil, ajuda e documentos para impressão.
+   ========================================================================== */
+
+/* Resumo de saúde */
+.health-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.health-item { background: var(--azul-claro-2); border: 1px solid #e1edf9; border-radius: var(--raio); padding: 12px; }
+.health-item span { display: flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--muted); }
+.health-item span svg { width: 15px; height: 15px; color: var(--azul); }
+.health-item strong { font-size: 1.08rem; font-family: var(--fonte-titulo); }
+.legend-item { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; font-size: .86rem; }
+
+/* Detalhes do atendimento */
+.detail-origin {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--raio);
+  background: var(--fundo); border: 1px solid var(--borda); margin-bottom: 18px;
+}
+.detail-origin strong { display: block; }
+.detail-list { margin: 0; padding-left: 18px; }
+.detail-list li { margin-bottom: 4px; }
+.detail-box { background: var(--fundo); border: 1px solid var(--borda); border-radius: var(--raio-sm); padding: 12px 14px; }
+.vitals { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+.vital { border: 1px solid var(--borda); border-radius: var(--raio); padding: 10px 12px; display: grid; grid-template-columns: auto 1fr; gap: 0 8px; align-items: center; }
+.vital svg { grid-row: span 2; color: var(--azul); }
+.vital span { font-size: .74rem; color: var(--muted); }
+.vital strong { font-size: .92rem; }
+.docs { display: flex; flex-wrap: wrap; gap: 8px; }
+.doc-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: var(--raio-sm);
+  border: 1px solid var(--borda); background: var(--superficie); font-size: .84rem; font-weight: 500; min-height: 40px;
+}
+.doc-chip:hover { border-color: var(--azul); color: var(--azul); }
+.result-table tr.alterado td { background: #fffbeb; }
+
+/* Consultas */
+.appt {
+  display: flex; gap: 16px; align-items: center; padding: 16px 18px; border: 1px solid var(--borda); border-radius: var(--raio-lg);
+  background: var(--superficie); margin-bottom: 12px; box-shadow: var(--sombra-sm); animation: rise .3s ease both;
+}
+.appt.past .date-box { background: var(--neutro-bg); color: var(--texto-2); }
+.appt-main { flex: 1; min-width: 0; }
+.appt-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.appt-top h3 { margin: 0; }
+.appt-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.text-danger { color: var(--perigo) !important; }
+.tab .tab-count { background: var(--neutro-bg); color: var(--texto-2); border-radius: 999px; padding: 0 8px; font-size: .75rem; }
+.tab[aria-selected="true"] .tab-count { background: var(--azul-claro); color: var(--azul-escuro); }
+
+/* Receitas */
+.rx-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.rx-card { background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio-lg); padding: 18px; display: flex; flex-direction: column; gap: 12px; box-shadow: var(--sombra-sm); animation: rise .3s ease both; }
+.rx-card-top { display: flex; gap: 12px; align-items: flex-start; }
+.rx-card-top h3 { margin: 0; }
+.rx-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; }
+.rx-info dt { font-size: .74rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+.rx-info dt svg { width: 13px; height: 13px; }
+.rx-info dd { margin: 0; font-size: .86rem; font-weight: 500; }
+.rx-orient { font-size: .84rem; color: var(--texto-2); background: var(--azul-claro-2); border-radius: var(--raio-sm); padding: 10px 12px; margin: 0; display: flex; gap: 8px; }
+.rx-orient svg { width: 15px; height: 15px; color: var(--azul); margin-top: 2px; }
+.rx { border: 1px solid var(--borda); border-radius: var(--raio-lg); padding: 20px; }
+.rx-head { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
+.rx-head strong { display: block; font-size: 1.15rem; }
+.rx-head > div { flex: 1; }
+.rx-symbol { font-size: 2rem; font-family: Georgia, serif; color: var(--azul); line-height: 1; }
+.rx-sign { margin-top: 26px; text-align: center; font-size: .86rem; }
+.rx-sign span { display: block; width: 220px; border-top: 1px solid var(--texto-2); margin: 0 auto 6px; }
+.med-list .switch { margin-left: 8px; }
+.progress-txt { font-size: .84rem; color: var(--muted); }
+
+/* Perfil */
+.profile-head {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding: 24px; border-radius: var(--raio-xl);
+  background: var(--superficie); border: 1px solid var(--borda); margin-bottom: 20px; box-shadow: var(--sombra-sm);
+  border-top: 4px solid var(--azul);
+}
+.profile-head h1 { font-size: 1.45rem; }
+.pref { align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--borda); width: 100%; }
+.pref:last-child { border-bottom: 0; }
+.pref strong { display: block; font-size: .9rem; }
+.pref .li-sub { font-size: .82rem; color: var(--muted); display: block; }
+
+/* Ajuda */
+.faq details { border: 1px solid var(--borda); border-radius: var(--raio); margin-bottom: 10px; background: var(--superficie); }
+.faq summary { cursor: pointer; padding: 14px 16px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 10px; align-items: center; min-height: 44px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-size: 1.3rem; color: var(--azul); line-height: 1; }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { padding: 0 16px 14px; margin: 0; color: var(--texto-2); }
+.channel { display: flex; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--borda); border-radius: var(--raio); background: var(--superficie); width: 100%; text-align: left; margin-bottom: 10px; min-height: 44px; }
+.channel:hover { border-color: var(--azul); }
+.channel strong { display: block; font-size: .9rem; }
+.channel small { color: var(--muted); }
+
+/* Documento de impressão (receitas, laudos) */
+.print-doc { background: #fff; padding: 32px; }
+.doc { max-width: 760px; margin: 0 auto; }
+.doc-head { display: flex; align-items: center; gap: 18px; border-bottom: 2px solid var(--azul); padding-bottom: 14px; margin-bottom: 18px; }
+.doc-logo { width: 150px; }
+.doc-head strong { display: block; }
+.doc-head span { font-size: .82rem; color: var(--muted); }
+.doc-title { font-size: 1.3rem; margin-bottom: 14px; }
+.doc-foot { margin-top: 30px; padding-top: 10px; border-top: 1px solid var(--borda); font-size: .75rem; color: var(--muted); }
+
+@media (max-width: 768px) {
+  .appt { flex-wrap: wrap; }
+  .appt-actions { width: 100%; }
+  .appt-actions .btn { flex: 1; }
+  .health-grid { grid-template-columns: 1fr 1fr; }
+  .rx-grid { grid-template-columns: 1fr; }
+  .med-list .list-item { flex-wrap: wrap; }
+}

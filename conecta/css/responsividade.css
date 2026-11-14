@@ -1,0 +1,108 @@
+/* ==========================================================================
+   CONECTA — Responsividade e preferências de acessibilidade
+   Breakpoints: 1280 (notebook), 1024 (tablet paisagem), 768 (tablet),
+   560 (smartphone). Carregado por último em todas as páginas.
+   ========================================================================== */
+
+.privacy-list { list-style: none; padding: 0; margin: 0 0 16px; display: flex; flex-direction: column; gap: 12px; }
+.privacy-list li { display: flex; gap: 10px; align-items: flex-start; }
+.privacy-list svg { color: var(--azul); margin-top: 3px; }
+
+/* ---------- Notebook ---------- */
+@media (max-width: 1280px) {
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .content { padding: 24px; }
+  .login-hero { padding: 36px 40px 30px; }
+  .hero-features { grid-template-columns: 1fr; }
+}
+
+/* ---------- Tablet paisagem: menu lateral vira gaveta ---------- */
+@media (max-width: 1024px) {
+  .sidebar { transform: translateX(-100%); box-shadow: var(--sombra-lg); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-close { display: inline-flex; }
+  .main-area { margin-left: 0; }
+  .topbar { padding: 0 16px; }
+  .topbar .menu-toggle { display: inline-flex; }
+  .topbar .topbar-logo { display: block; }
+  .topbar .topbar-logo .logo-crop { width: 112px; }
+  .topbar-title { display: none; }
+  .grid-main, .grid-3 { grid-template-columns: minmax(0, 1fr); }
+  .form-grid.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .form-grid.cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .login-layout { grid-template-columns: 1fr; }
+  .login-hero { padding: 28px 24px; gap: 16px; }
+  .hero-illustration { max-width: 360px; }
+  .hero-features { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .login-side { padding: 32px 16px 24px; }
+}
+
+/* ---------- Tablet retrato ---------- */
+@media (max-width: 768px) {
+  body { font-size: 15px; }
+  .content { padding: 20px 16px; }
+  .grid-2 { grid-template-columns: minmax(0, 1fr); }
+  .form-grid, .form-grid.cols-3, .form-grid.cols-4 { grid-template-columns: 1fr; }
+  .span-2 { grid-column: auto; }
+  .dl { grid-template-columns: 1fr; }
+  .user-chip .uc-text { display: none; }
+  .user-chip { padding: 3px; }
+  .page-head { align-items: flex-start; }
+  .page-head .btn-row { width: 100%; }
+  .welcome { padding: 22px 20px; }
+  .welcome h1 { font-size: 1.4rem; }
+  .app-footer { padding: 16px; }
+  .notif-panel { right: 12px; }
+
+  /* Tabelas viram cartões empilhados */
+  .table-responsive thead { display: none; }
+  .table-responsive, .table-responsive tbody, .table-responsive tr, .table-responsive td { display: block; width: 100%; }
+  .table-responsive tr { border: 1px solid var(--borda); border-radius: var(--raio); margin-bottom: 12px; padding: 6px 4px; background: var(--superficie); }
+  .table-responsive td { border: 0; padding: 8px 12px; display: flex; justify-content: space-between; gap: 12px; text-align: right; }
+  .table-responsive td { overflow-wrap: anywhere; }
+  .table-responsive td::before { content: attr(data-label); font-weight: 600; color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; text-align: left; flex-shrink: 0; }
+  .table-responsive td .actions { justify-content: flex-end; }
+  .table-wrap { overflow: visible; }
+
+  .modal-backdrop { align-items: flex-end; padding: 0; }
+  .modal { border-radius: var(--raio-xl) var(--raio-xl) 0 0; max-height: 92vh; }
+  .modal-head, .modal-body, .modal-foot { padding-left: 18px; padding-right: 18px; }
+  .modal-foot .btn { flex: 1; }
+
+  .hero-features { grid-template-columns: 1fr; }
+  .hero-illustration { display: none; }
+  .hero-text p { font-size: .95rem; }
+}
+
+/* ---------- Smartphone ---------- */
+@media (max-width: 560px) {
+  .grid-4 { grid-template-columns: 1fr; }
+  .list-item { flex-wrap: wrap; }
+  .list-item .actions { width: 100%; justify-content: flex-end; }
+  .shortcuts { grid-template-columns: 1fr 1fr; }
+  .stat { padding: 16px; }
+  .stat-value { font-size: 1.5rem; }
+  .card { padding: 18px 16px; }
+  .btn-row .btn { flex: 1 1 auto; }
+  .tabs { margin-left: -4px; margin-right: -4px; }
+  .timeline::before { left: 17px; }
+  .tl-item { padding-left: 48px; }
+  .tl-dot { width: 36px; height: 36px; }
+  .toast-area { left: 12px; right: 12px; bottom: 12px; }
+  .toast { min-width: 0; max-width: none; }
+
+  .login-hero { display: none; }
+  .card-logo { display: block; }
+  .demo-grid { grid-template-columns: 1fr; }
+  .demo-btn { flex-direction: row; align-items: center; }
+  .access-switch button { font-size: .82rem; }
+}
+
+/* ---------- Preferências do usuário ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+@media (forced-colors: active) {
+  .btn, .card, .stat, .nav-link[aria-current="page"] { border: 1px solid CanvasText; }
+}

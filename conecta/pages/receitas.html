@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <title>Minhas receitas | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/paciente.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/exames.js" defer></script>
+  <script src="../js/paciente.js" defer></script>
+</head>
+<body data-page="receitas" data-roles="paciente">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head"><div><h1>Minhas receitas e medicamentos</h1><p>Receitas registradas por profissionais da rede e os medicamentos que você usa atualmente.</p></div></div>
+    <section id="abas-receitas" aria-label="Receitas e medicamentos">
+      <div class="tabs" role="tablist" aria-label="Seções">
+        <button type="button" class="tab" role="tab" data-aba="receitas" id="tab-receitas" aria-controls="painel-receitas"><i data-lucide="file-text" aria-hidden="true"></i> Minhas receitas</button>
+        <button type="button" class="tab" role="tab" data-aba="medicamentos" id="tab-medicamentos" aria-controls="painel-medicamentos"><i data-lucide="pill" aria-hidden="true"></i> Meus medicamentos</button>
+      </div>
+      <div data-painel="receitas" id="painel-receitas" role="tabpanel" aria-labelledby="tab-receitas">
+        <form id="filtros-receitas" class="filters" role="search">
+          <div class="field"><label for="r-busca">Buscar</label><input class="input" id="r-busca" name="busca" type="text" placeholder="Medicamento ou médico"><span class="field-error" data-erro-de="r-busca"></span></div>
+          <div class="field"><label for="r-status">Situação</label><select class="select" id="r-status" name="status"><option value="">Todas</option><option value="ativas">Em uso</option><option value="concluidas">Concluídas</option></select></div>
+        </form>
+        <div class="rx-grid" id="lista-receitas"></div>
+      </div>
+      <div data-painel="medicamentos" id="painel-medicamentos" role="tabpanel" aria-labelledby="tab-medicamentos" class="hidden">
+        <div id="alergia-alerta"></div>
+        <section class="card" aria-labelledby="t-meds"><div class="card-header"><h2 id="t-meds"><i data-lucide="pill" aria-hidden="true"></i> Medicamentos em uso</h2><span class="progress-txt" id="progresso-med" aria-live="polite"></span></div>
+          <p class="small muted">Marque os medicamentos que você já tomou hoje. Este registro fica apenas neste dispositivo.</p>
+          <div id="lista-medicamentos"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

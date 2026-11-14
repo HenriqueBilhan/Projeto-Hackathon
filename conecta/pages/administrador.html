@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <title>Visão geral | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/administrador.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/administrador.js" defer></script>
+</head>
+<body data-page="admin" data-roles="admin">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head"><div><h1>Visão geral da rede</h1><p>Indicadores consolidados da rede Conecta (dados demonstrativos).</p></div><div class="btn-row"><a class="btn btn-outline" href="seguranca.html?aba=auditoria"><i data-lucide="scroll-text" aria-hidden="true"></i> Auditoria</a><a class="btn btn-primary" href="relatorios.html"><i data-lucide="bar-chart-3" aria-hidden="true"></i> Relatórios</a></div></div>
+    <section aria-labelledby="t-k"><h2 id="t-k" class="sr-only">Indicadores</h2><div class="grid-5" id="kpis-admin"></div></section>
+    <div class="grid grid-main section">
+      <section class="card" aria-labelledby="t-g1"><div class="card-header"><h2 id="t-g1"><i data-lucide="trending-up" aria-hidden="true"></i> Atendimentos e exames por mês</h2></div><div class="chart-box "><canvas id="g-volume" role="img" aria-label="Gráfico de linhas: atendimentos e exames nos últimos seis meses"></canvas></div></section>
+      <section class="card" aria-labelledby="t-g2"><div class="card-header"><h2 id="t-g2"><i data-lucide="pie-chart" aria-hidden="true"></i> Atendimentos por tipo de unidade</h2></div><div class="chart-box "><canvas id="g-tipos" role="img" aria-label="Gráfico de rosca: distribuição dos atendimentos por tipo de unidade"></canvas></div></section>
+    </div>
+    <div class="grid grid-main section">
+      <section class="card" aria-labelledby="t-g3"><div class="card-header"><h2 id="t-g3"><i data-lucide="building-2" aria-hidden="true"></i> Atendimentos por unidade (mês atual)</h2><a class="card-link" href="unidades.html">Gerenciar unidades <i data-lucide="chevron-right" aria-hidden="true"></i></a></div><div class="chart-box lg"><canvas id="g-unidades" role="img" aria-label="Gráfico de barras: atendimentos por unidade"></canvas></div></section>
+      <section class="card" aria-labelledby="t-at"><div class="card-header"><h2 id="t-at"><i data-lucide="activity" aria-hidden="true"></i> Atividades recentes</h2><a class="card-link" href="seguranca.html?aba=auditoria">Ver auditoria <i data-lucide="chevron-right" aria-hidden="true"></i></a></div><div id="atividades"></div></section>
+    </div>
+    <section class="card section" aria-labelledby="t-si"><div class="card-header"><h2 id="t-si"><i data-lucide="plug-zap" aria-hidden="true"></i> Status das integrações</h2><a class="card-link" href="rede.html">Ver rede <i data-lucide="chevron-right" aria-hidden="true"></i></a></div><div id="status-integracao" class="two-col-list"></div></section>
+  </main>
+</body>
+</html>

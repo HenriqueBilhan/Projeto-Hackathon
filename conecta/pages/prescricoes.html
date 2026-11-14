@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <title>Prescrições | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/medico.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/exames.js" defer></script>
+  <script src="../js/medico.js" defer></script>
+  <script src="../js/atendimento.js" defer></script>
+</head>
+<body data-page="prescricoes" data-roles="medico">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head"><div><h1>Prescrições</h1><p>Registre prescrições médicas. Elas ficam disponíveis imediatamente na área do paciente.</p></div></div>
+    <section class="card" aria-labelledby="t-npr"><div class="card-header"><h2 id="t-npr"><i data-lucide="pill" aria-hidden="true"></i> Nova prescrição</h2></div>
+      <div id="rx-alerta"></div>
+      <form id="form-prescricao" class="form-grid cols-3" novalidate>
+        <div class="field span-2"><label for="rx-paciente">Paciente <span class="req" aria-hidden="true">*</span></label><select class="select" id="rx-paciente" name="paciente" required><option value="">Selecione o paciente</option></select><span class="field-error" data-erro-de="rx-paciente"></span></div>
+        <div class="field"><label for="rx-profissional">Profissional responsável</label><input class="input" id="rx-profissional" name="profissional" readonly></div>
+        <div class="field"><label for="rx-medicamento">Medicamento <span class="req" aria-hidden="true">*</span></label><input class="input" id="rx-medicamento" name="medicamento" type="text" placeholder="Nome do medicamento" required list="lista-medicamentos" autocomplete="off"><span class="field-error" data-erro-de="rx-medicamento"></span></div>
+        <div class="field"><label for="rx-dosagem">Dosagem <span class="req" aria-hidden="true">*</span></label><input class="input" id="rx-dosagem" name="dosagem" type="text" placeholder="Ex.: 500 mg — 1 comprimido" required><span class="field-error" data-erro-de="rx-dosagem"></span></div>
+        <div class="field"><label for="rx-frequencia">Frequência <span class="req" aria-hidden="true">*</span></label><select class="select" id="rx-frequencia" name="frequencia" required><option value="">Selecione</option><option value="1 vez ao dia">1 vez ao dia</option><option value="2 vezes ao dia">2 vezes ao dia</option><option value="3 vezes ao dia">3 vezes ao dia</option><option value="De 6 em 6 horas">De 6 em 6 horas</option><option value="De 8 em 8 horas">De 8 em 8 horas</option><option value="De 12 em 12 horas">De 12 em 12 horas</option><option value="Se necessário">Se necessário</option></select><span class="field-error" data-erro-de="rx-frequencia"></span></div>
+        <div class="field"><label for="rx-duracao">Duração do tratamento <span class="req" aria-hidden="true">*</span></label><input class="input" id="rx-duracao" name="duracao" type="text" placeholder="Ex.: 7 dias" required list="lista-duracoes" autocomplete="off"><span class="field-error" data-erro-de="rx-duracao"></span></div>
+        <div class="field span-2"><label for="rx-orientacoes">Orientações ao paciente</label><textarea class="textarea" id="rx-orientacoes" name="orientacoes" rows="2" placeholder="Como tomar, cuidados, retorno…"></textarea><span class="field-error" data-erro-de="rx-orientacoes"></span></div>
+        <datalist id="lista-medicamentos"><option value="Amoxicilina"><option value="Azitromicina"><option value="Cefalexina"><option value="Dipirona"><option value="Paracetamol"><option value="Ibuprofeno"><option value="Losartana potássica"><option value="Enalapril"><option value="Hidroclorotiazida"><option value="Metformina"><option value="Glibenclamida"><option value="Sinvastatina"><option value="Omeprazol"><option value="Levotiroxina"><option value="Nitrofurantoína"><option value="Salbutamol"><option value="Prednisona"><option value="Insulina NPH"></datalist>
+        <datalist id="lista-duracoes"><option value="5 dias"><option value="7 dias"><option value="10 dias"><option value="14 dias"><option value="30 dias"><option value="Uso contínuo"></datalist>
+        <div class="btn-row end span-all"><button type="button" class="btn btn-ghost" id="rx-limpar"><i data-lucide="eraser" aria-hidden="true"></i> Limpar</button><button type="submit" class="btn btn-primary"><i data-lucide="save" aria-hidden="true"></i> Registrar prescrição</button></div>
+      </form>
+    </section>
+    <section class="card section" aria-labelledby="t-pan">
+      <div class="card-header"><h2 id="t-pan"><i data-lucide="history" aria-hidden="true"></i> Prescrições anteriores</h2>
+        <div class="field"><label for="rx-filtro" class="sr-only">Filtrar prescrições</label><select class="select" id="rx-filtro"><option value="minhas">Minhas prescrições</option><option value="paciente">Do paciente selecionado</option><option value="todas">Todas da rede</option></select></div></div>
+      <div id="rx-lista"></div>
+    </section>
+  </main>
+</body>
+</html>

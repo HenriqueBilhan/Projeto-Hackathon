@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <title>Registro de atendimento | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/medico.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/exames.js" defer></script>
+  <script src="../js/medico.js" defer></script>
+  <script src="../js/atendimento.js" defer></script>
+</head>
+<body data-page="atendimento" data-roles="medico">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head"><div><h1>Registro de atendimento</h1><p>Registre o atendimento clínico. Ao salvar, o registro passa a compor a linha do tempo do paciente em toda a rede.</p></div></div>
+    <div class="form-layout">
+      <form id="form-atendimento" novalidate aria-label="Formulário de atendimento">
+        <fieldset class="fieldset"><legend><i data-lucide="user-round" aria-hidden="true"></i> Identificação</legend>
+          <div class="form-grid">
+            <div class="field span-all"><label for="at-paciente">Paciente <span class="req" aria-hidden="true">*</span></label><select class="select" id="at-paciente" name="paciente" required><option value="">Selecione o paciente</option></select><span class="field-error" data-erro-de="at-paciente"></span></div>
+            <div class="field"><label for="at-unidade">Unidade de saúde <span class="req" aria-hidden="true">*</span></label><select class="select" id="at-unidade" name="unidade" required></select><span class="field-error" data-erro-de="at-unidade"></span></div>
+            <div class="field"><label for="at-profissional">Profissional responsável</label><input class="input" id="at-profissional" name="profissional" readonly></div>
+            <div class="field"><label for="at-data">Data e horário <span class="req" aria-hidden="true">*</span></label><input class="input" id="at-data" name="data" type="datetime-local" required><span class="field-error" data-erro-de="at-data"></span></div>
+            <div class="field"><label for="at-tipo">Tipo de atendimento</label><select class="select" id="at-tipo" name="tipo"><option value="Consulta">Consulta</option><option value="Atendimento de urgência">Atendimento de urgência</option><option value="Procedimento">Procedimento</option><option value="Internação">Internação</option></select></div>
+            <div class="field span-all"><label for="at-especialidade">Especialidade</label><select class="select" id="at-especialidade" name="especialidade"></select></div>
+          </div>
+        </fieldset>
+        <fieldset class="fieldset"><legend><i data-lucide="message-square-text" aria-hidden="true"></i> Anamnese</legend>
+          <div class="form-grid">
+            <div class="field span-all"><label for="at-queixa">Queixa principal <span class="req" aria-hidden="true">*</span></label><input class="input" id="at-queixa" name="queixa" type="text" placeholder="Ex.: febre e dor abdominal há 2 dias" required><span class="field-error" data-erro-de="at-queixa"></span></div>
+            <div class="field span-all"><label for="at-hda">Histórico da doença atual</label><textarea class="textarea" id="at-hda" name="hda" rows="3" placeholder="Início, evolução, sintomas associados, tratamentos prévios…"></textarea><span class="field-error" data-erro-de="at-hda"></span></div>
+          </div>
+        </fieldset>
+        <fieldset class="fieldset"><legend><i data-lucide="activity" aria-hidden="true"></i> Sinais vitais</legend><div class="vitals-grid"><div class="field"><label for="at-pa">Pressão arterial</label><div class="input-unit"><input class="input" id="at-pa" name="pa" type="text" inputmode="text" placeholder="120/80"><span>mmHg</span></div><span class="field-error" data-erro-de="at-pa"></span></div><div class="field"><label for="at-fc">Freq. cardíaca</label><div class="input-unit"><input class="input" id="at-fc" name="fc" type="text" inputmode="numeric" placeholder="80"><span>bpm</span></div><span class="field-error" data-erro-de="at-fc"></span></div><div class="field"><label for="at-fr">Freq. respiratória</label><div class="input-unit"><input class="input" id="at-fr" name="fr" type="text" inputmode="numeric" placeholder="16"><span>irpm</span></div><span class="field-error" data-erro-de="at-fr"></span></div><div class="field"><label for="at-temp">Temperatura</label><div class="input-unit"><input class="input" id="at-temp" name="temp" type="text" inputmode="decimal" placeholder="36,5"><span>°C</span></div><span class="field-error" data-erro-de="at-temp"></span></div><div class="field"><label for="at-spo2">Saturação O₂</label><div class="input-unit"><input class="input" id="at-spo2" name="spo2" type="text" inputmode="numeric" placeholder="98"><span>%</span></div><span class="field-error" data-erro-de="at-spo2"></span></div><div class="field"><label for="at-peso">Peso</label><div class="input-unit"><input class="input" id="at-peso" name="peso" type="text" inputmode="decimal" placeholder="70"><span>kg</span></div><span class="field-error" data-erro-de="at-peso"></span></div><div class="field"><label for="at-glicemia">Glicemia capilar</label><div class="input-unit"><input class="input" id="at-glicemia" name="glicemia" type="text" inputmode="numeric" placeholder="99"><span>mg/dL</span></div><span class="field-error" data-erro-de="at-glicemia"></span></div></div></fieldset>
+        <fieldset class="fieldset"><legend><i data-lucide="clipboard-check" aria-hidden="true"></i> Avaliação e diagnóstico</legend>
+          <div class="form-grid">
+            <div class="field span-all"><label for="at-avaliacao">Avaliação clínica / exame físico</label><textarea class="textarea" id="at-avaliacao" name="avaliacao" rows="3"></textarea><span class="field-error" data-erro-de="at-avaliacao"></span></div>
+            <div class="field"><label for="at-diagnostico">Diagnóstico <span class="req" aria-hidden="true">*</span></label><input class="input" id="at-diagnostico" name="diagnostico" type="text" placeholder="Hipótese diagnóstica" required><span class="field-error" data-erro-de="at-diagnostico"></span></div>
+            <div class="field"><label for="at-cid">CID-10</label><input class="input" id="at-cid" name="cid" type="text" placeholder="Ex.: N39.0"><span class="field-error" data-erro-de="at-cid"></span></div>
+          </div>
+        </fieldset>
+        <fieldset class="fieldset"><legend><i data-lucide="syringe" aria-hidden="true"></i> Procedimentos realizados</legend>
+          <div class="checks" id="at-procedimentos"></div>
+          <div class="form-grid mt-2"><div class="field span-all"><label for="at-proc-outros">Outros procedimentos</label><input class="input" id="at-proc-outros" name="procOutros" type="text"><span class="field-error" data-erro-de="at-proc-outros"></span></div></div>
+        </fieldset>
+        <fieldset class="fieldset"><legend><i data-lucide="pill" aria-hidden="true"></i> Prescrição médica</legend>
+          <div class="form-grid"><div class="field span-all"><label for="at-prescricao">Prescrição</label><textarea class="textarea" id="at-prescricao" name="prescricao" rows="3" placeholder="Medicamento, dose, via, frequência e duração"></textarea><span class="field-error" data-erro-de="at-prescricao"></span></div></div>
+          <p class="small muted mb-0 mt-2">Para receitas estruturadas visíveis ao paciente, use também <a href="prescricoes.html">Prescrições</a>.</p>
+        </fieldset>
+        <fieldset class="fieldset"><legend><i data-lucide="flask-conical" aria-hidden="true"></i> Solicitação de exames</legend><div class="checks" id="at-exames"></div></fieldset>
+        <fieldset class="fieldset"><legend><i data-lucide="send" aria-hidden="true"></i> Encaminhamento</legend>
+          <div class="form-grid">
+            <div class="field"><label for="at-enc-especialidade">Especialidade</label><select class="select" id="at-enc-especialidade" name="encEspecialidade"><option value="">Sem encaminhamento</option></select></div>
+            <div class="field"><label for="at-enc-destino">Unidade de destino</label><select class="select" id="at-enc-destino" name="encDestino"><option value="">Selecione</option></select></div>
+          </div>
+        </fieldset>
+        <fieldset class="fieldset"><legend><i data-lucide="notebook-pen" aria-hidden="true"></i> Observações clínicas</legend><div class="form-grid"><div class="field span-all"><label for="at-observacoes">Observações</label><textarea class="textarea" id="at-observacoes" name="observacoes" rows="3"></textarea><span class="field-error" data-erro-de="at-observacoes"></span></div></div></fieldset>
+        <div class="form-actions">
+          <span class="hint"><i data-lucide="info" aria-hidden="true"></i> Campos com * são obrigatórios.</span>
+          <button type="button" class="btn btn-ghost" id="btn-cancelar"><i data-lucide="x" aria-hidden="true"></i> Cancelar</button>
+          <button type="button" class="btn btn-outline" id="btn-rascunho"><i data-lucide="file-pen" aria-hidden="true"></i> Salvar como rascunho</button>
+          <button type="submit" class="btn btn-primary"><i data-lucide="save" aria-hidden="true"></i> Salvar atendimento</button>
+        </div>
+      </form>
+      <aside class="form-aside" aria-labelledby="t-res"><section class="card"><div class="card-header"><h2 id="t-res"><i data-lucide="clipboard-list" aria-hidden="true"></i> Resumo do paciente</h2></div><div id="at-resumo"></div></section></aside>
+    </div>
+    <div class="grid grid-2 section" id="listas-atendimento">
+      <section class="card" aria-labelledby="t-rs"><div class="card-header"><h2 id="t-rs"><i data-lucide="file-pen" aria-hidden="true"></i> Rascunhos</h2></div><div id="lista-rascunhos"></div></section>
+      <section class="card" aria-labelledby="t-ma"><div class="card-header"><h2 id="t-ma"><i data-lucide="history" aria-hidden="true"></i> Meus atendimentos recentes</h2></div><div id="lista-atendimentos"></div></section>
+    </div>
+  </main>
+</body>
+</html>

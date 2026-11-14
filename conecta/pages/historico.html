@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <title>Meu histórico médico | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/paciente.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/exames.js" defer></script>
+  <script src="../js/paciente.js" defer></script>
+</head>
+<body data-page="historico" data-roles="paciente">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head"><div><h1>Meu histórico médico</h1><p>Todos os seus atendimentos registrados na rede, em ordem cronológica. Clique em um registro para ver os detalhes.</p></div><div class="btn-row no-print"><button type="button" class="btn btn-outline" id="btn-imprimir-historico"><i data-lucide="printer" aria-hidden="true"></i> Imprimir</button><a class="btn btn-secondary" href="exames.html"><i data-lucide="flask-conical" aria-hidden="true"></i> Meus exames</a></div></div>
+    <section class="card no-print" aria-label="Filtros do histórico">
+      <form id="filtros-historico" class="filters" role="search">
+        <div class="field"><label for="h-busca">Buscar</label><input class="input" id="h-busca" name="busca" type="text" placeholder="Motivo, diagnóstico, profissional…"><span class="field-error" data-erro-de="h-busca"></span></div>
+        <div class="field"><label for="h-unidade">Unidade</label><select class="select" id="h-unidade" name="unidade"><option value="">Todas as unidades</option></select></div>
+        <div class="field"><label for="h-tipo">Tipo de registro</label><select class="select" id="h-tipo" name="tipo"><option value="">Todos os tipos</option></select></div>
+        <div class="field"><label for="h-ano">Ano</label><select class="select" id="h-ano" name="ano"><option value="">Todos os anos</option></select></div>
+        <div class="field"><span class="label" aria-hidden="true">&nbsp;</span><button type="reset" class="btn btn-ghost"><i data-lucide="rotate-ccw" aria-hidden="true"></i> Limpar filtros</button></div>
+      </form>
+      <div class="flex items-center gap-3" id="h-resumo-wrap"><span class="small muted">Registros por tipo de unidade:</span><div id="h-resumo"></div></div>
+    </section>
+    <section class="section" aria-labelledby="t-tl">
+      <div class="card-header"><h2 id="t-tl"><i data-lucide="git-commit-vertical" aria-hidden="true"></i> Linha do tempo</h2><span class="filter-count" id="h-contagem" aria-live="polite"></span></div>
+      <div id="timeline-paciente"></div>
+    </section>
+  </main>
+</body>
+</html>
