@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública.">
+  <title>Buscar paciente | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/medico.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/config.js" defer></script>
+  <script src="../js/api.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/exames.js" defer></script>
+  <script src="../js/medico.js" defer></script>
+  <script src="../js/atendimento.js" defer></script>
+</head>
+<body data-page="buscar" data-roles="medico">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head"><div><h1>Buscar paciente</h1><p>Localize pacientes da rede por CPF, nome completo ou Cartão Nacional de Saúde (CNS).</p></div></div>
+    <section class="card search-card" aria-labelledby="t-busca">
+      <h2 id="t-busca" class="sr-only">Formulário de busca</h2>
+      <form id="form-busca" class="search-form" role="search" novalidate>
+        <div class="field"><label for="busca-tipo">Pesquisar por</label><select class="select" id="busca-tipo"><option value="cpf">CPF</option><option value="nome">Nome completo</option><option value="cns">CNS (Cartão SUS)</option></select></div>
+        <div class="field"><label for="busca-termo">Termo de busca</label><div class="input-icon"><i data-lucide="search" aria-hidden="true"></i><input class="input" id="busca-termo" type="text" inputmode="numeric" placeholder="000.000.000-00" aria-describedby="erro-busca"></div><span class="field-error" id="erro-busca" aria-live="polite"></span></div>
+        <div class="field"><span class="label" aria-hidden="true">&nbsp;</span><button type="submit" class="btn btn-primary"><i data-lucide="search" aria-hidden="true"></i> Buscar paciente</button></div>
+      </form>
+
+    </section>
+    <div class="alert alert-info section"><i data-lucide="shield-check" aria-hidden="true"></i><span>Os documentos são exibidos mascarados. A abertura de um prontuário é registrada na auditoria e o paciente é notificado, conforme a LGPD.</span></div>
+    <section class="card" aria-labelledby="resultado-titulo">
+      <div class="card-header"><h2 id="resultado-titulo" tabindex="-1">Resultados</h2></div>
+      <div id="resultado-busca"></div>
+    </section>
+  </main>
+</body>
+</html>

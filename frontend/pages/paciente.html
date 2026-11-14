@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública.">
+  <title>Visão geral | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/paciente.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/config.js" defer></script>
+  <script src="../js/api.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/exames.js" defer></script>
+  <script src="../js/paciente.js" defer></script>
+</head>
+<body data-page="visao-geral" data-roles="paciente">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <section class="welcome anim-rise" id="boas-vindas" aria-label="Boas-vindas"></section>
+    <section aria-labelledby="t-cards"><h2 id="t-cards" class="sr-only">Resumo da conta</h2><div class="grid grid-4" id="cards-paciente"></div></section>
+    <div class="grid grid-main section">
+      <div class="stack">
+        <section class="card" aria-labelledby="t-ult"><div class="card-header"><h2 id="t-ult"><i data-lucide="history" aria-hidden="true"></i> Últimos atendimentos</h2><a class="card-link" href="historico.html">Ver histórico completo <i data-lucide="chevron-right" aria-hidden="true"></i></a></div><div id="ultimos-atendimentos"></div></section>
+        <section class="card" aria-labelledby="t-prox"><div class="card-header"><h2 id="t-prox"><i data-lucide="calendar-days" aria-hidden="true"></i> Próximas consultas</h2><a class="card-link" href="consultas.html">Todas as consultas <i data-lucide="chevron-right" aria-hidden="true"></i></a></div><div id="proximas-consultas"></div></section>
+        <section class="card network-cta" aria-labelledby="t-rede">
+          <div class="flex items-center gap-3"><span class="stat-ico"><i data-lucide="network" aria-hidden="true"></i></span><div><h2 id="t-rede" class="mb-0">Seu histórico acompanha você</h2><p class="muted mb-0">Atendida na UPA ou na UBS, seus registros ficam disponíveis para profissionais autorizados de toda a rede.</p></div></div>
+          <a class="btn btn-secondary" href="rede.html"><i data-lucide="building-2" aria-hidden="true"></i> Conhecer as unidades</a>
+        </section>
+      </div>
+      <div class="stack">
+        <section class="card" aria-labelledby="t-saude"><div class="card-header"><h2 id="t-saude"><i data-lucide="heart-pulse" aria-hidden="true"></i> Resumo da minha saúde</h2><a class="card-link" href="perfil-paciente.html">Meu perfil <i data-lucide="chevron-right" aria-hidden="true"></i></a></div><div id="resumo-saude"></div></section>
+        <section class="card" aria-labelledby="t-acessos"><div class="card-header"><h2 id="t-acessos"><i data-lucide="shield-check" aria-hidden="true"></i> Quem acessou meu prontuário</h2><a class="card-link" href="perfil-paciente.html#acessos">Ver todos <i data-lucide="chevron-right" aria-hidden="true"></i></a></div><div id="acessos-prontuario"></div></section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

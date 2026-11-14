@@ -1,0 +1,91 @@
+/* ==========================================================================
+   CONECTA — Área do profissional de saúde
+   Dashboard clínico, busca, prontuário integrado, formulários clínicos,
+   fluxo de exames.
+   ========================================================================== */
+
+.hello h1 { margin-bottom: 2px; }
+.hello p { color: var(--muted); margin: 0; }
+.time-pill { font-weight: 700; font-size: .85rem; color: var(--azul-escuro); background: var(--azul-claro); border-radius: 8px; padding: 6px 10px; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.mono { font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+.list-item .actions { display: flex; gap: 6px; }
+
+/* Busca */
+.search-card { background: var(--azul-claro-2); border: 1px solid #d6e6f5; border-left: 4px solid var(--azul); }
+.search-form { display: grid; grid-template-columns: 200px 1fr auto; gap: 12px; align-items: start; }
+.search-form .btn { min-height: 48px; }
+.search-form .input, .search-form .select { min-height: 48px; }
+.examples { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; font-size: .84rem; color: var(--muted); }
+.examples button { border: 1px dashed #b9d5f1; background: #fff; border-radius: 999px; padding: 6px 12px; font-size: .8rem; color: var(--azul-escuro); min-height: 36px; }
+.examples button:hover { border-style: solid; border-color: var(--azul); }
+.inline-search { display: flex; gap: 8px; }
+.inline-search .input-icon { flex: 1; }
+
+/* Prontuário */
+.pc-head {
+  display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; padding: 24px; border-radius: var(--raio-xl);
+  background: var(--superficie); border: 1px solid var(--borda); box-shadow: var(--sombra-sm); margin-bottom: 16px;
+  border-top: 4px solid var(--azul);
+}
+.pc-head h1 { font-size: 1.5rem; }
+.pc-dados { display: grid; grid-template-columns: repeat(4, minmax(0, auto)); gap: 10px 26px; margin: 12px 0 0; }
+.pc-dados dt { font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+.pc-dados dd { margin: 0; font-weight: 600; font-size: .9rem; }
+.pc-acoes { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
+.allergy-banner { font-size: .92rem; border-width: 2px; }
+.allergy-banner em { font-style: normal; color: #9b1c1c; font-weight: 500; }
+.access-note { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--muted); background: var(--azul-claro-2); border: 1px solid #dceaf8; padding: 8px 12px; border-radius: var(--raio-sm); margin-bottom: 16px; }
+.access-note svg { color: var(--azul); width: 16px; height: 16px; }
+.unit-pill { display: inline-flex; align-items: center; gap: 6px; font-size: .82rem; padding: 6px 10px; border: 1px solid var(--borda); border-radius: 999px; margin: 0 6px 6px 0; background: var(--superficie); }
+.info-card h3 { display: flex; align-items: center; gap: 8px; font-size: .95rem; margin-bottom: 10px; }
+.info-card h3 svg { color: var(--azul); }
+.tl-card.highlight { border-color: var(--azul); box-shadow: 0 0 0 4px rgba(23, 105, 194, .18); }
+
+/* Formulário clínico */
+.form-layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 20px; align-items: start; }
+.form-aside { position: sticky; top: calc(var(--header-h) + 16px); }
+.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px 16px; }
+.check { min-height: 32px; }
+.vitals-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.input-unit { position: relative; }
+.input-unit .input { padding-right: 52px; }
+.input-unit span { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: .78rem; color: var(--muted); pointer-events: none; }
+.form-actions {
+  position: sticky; bottom: 0; z-index: 5; background: rgba(255, 255, 255, .95); backdrop-filter: blur(6px);
+  border: 1px solid var(--borda); border-radius: var(--raio-lg); padding: 14px 18px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap;
+  box-shadow: 0 -6px 20px rgba(15, 36, 64, .06);
+}
+.form-actions .hint { margin-right: auto; font-size: .82rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+
+/* Fluxo de status de exames */
+.flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.flow-step {
+  flex: 1; min-width: 150px; display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: var(--raio);
+  border: 1px solid var(--borda); background: var(--superficie); text-align: left; font-size: .82rem; color: var(--muted);
+  transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+.flow-step strong { display: block; font-size: 1.3rem; color: var(--texto); font-family: var(--fonte-titulo); line-height: 1.1; }
+.flow-step:hover { border-color: var(--azul); }
+.flow-step.active { border-color: var(--azul); box-shadow: var(--foco); }
+.flow-n { width: 32px; height: 32px; border-radius: 50%; background: var(--azul-claro); color: var(--azul); font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.flow-arrow { color: var(--borda-forte); }
+.mini-steps { display: flex; gap: 3px; margin-bottom: 6px; }
+.mini-steps span { width: 18px; height: 4px; border-radius: 2px; background: var(--borda); }
+.mini-steps span.on { background: var(--azul); }
+
+@media (max-width: 1200px) {
+  .form-layout { grid-template-columns: minmax(0, 1fr); }
+  .form-aside { position: static; order: -1; }
+  .pc-dados { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 768px) {
+  .search-form { grid-template-columns: 1fr; }
+  .vitals-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pc-head { padding: 18px; }
+  .pc-acoes { width: 100%; }
+  .flow-arrow { display: none; }
+  .flow-step { min-width: calc(50% - 4px); }
+  .form-actions .hint { width: 100%; }
+  .form-actions .btn { flex: 1; }
+  .hide-sm { display: none; }
+}

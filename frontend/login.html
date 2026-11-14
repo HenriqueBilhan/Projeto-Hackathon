@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Acesse o Conecta: área do paciente e do profissional de saúde.">
+  <title>Entrar | Conecta</title>
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/auth.js" defer></script>
+</head>
+<body data-page="login" class="login-page">
+  <a href="#form-login" class="skip-link">Ir para o formulário de acesso</a>
+
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando Conecta">
+    <span class="logo-crop"><img src="assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Conectando sua saúde…</p>
+  </div>
+
+  <div class="utility-bar">
+    <div class="wrap">
+      <nav class="utility-links" aria-label="Atalhos"><a href="index.html#unidades">Unidades de saúde</a><a href="index.html#contato">Ajuda</a></nav>
+      <div class="utility-tools"><a href="index.html#contato">Ouvidoria</a></div>
+    </div>
+  </div>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a href="index.html" class="site-logo" aria-label="Conecta — voltar ao portal"><span class="logo-crop"><img src="assets/img/logo-conecta.png" alt="Conecta"></span></a>
+      <a href="index.html" class="btn btn-outline btn-sm"><i data-lucide="arrow-left" aria-hidden="true"></i> Voltar ao portal</a>
+    </div>
+  </header>
+
+  <main class="login-main">
+    <div class="wrap login-grid">
+      <!-- Informações -->
+      <section class="login-info" aria-labelledby="info-title">
+        <span class="eyebrow">Área restrita</span>
+        <h1 id="info-title">Sua saúde integrada, seu histórico sempre com você.</h1>
+        <p>Entre com seu CPF para consultar atendimentos, exames e receitas de todas as unidades da rede pública integradas ao Conecta.</p>
+        <ul class="checklist">
+          <li>Atendimentos de UBS, UPA, hospitais e laboratórios em um só lugar</li>
+          <li>Resultados de exames com laudo para salvar em PDF</li>
+          <li>Receitas, medicamentos e próximas consultas</li>
+          <li>Registro de cada acesso ao seu prontuário</li>
+        </ul>
+        <p class="info-note"><i data-lucide="shield-check" aria-hidden="true"></i><span>Profissionais de saúde e gestores usam o mesmo endereço, selecionando “Profissional de saúde”. O acesso a dados clínicos é restrito a profissionais autorizados.</span></p>
+      </section>
+
+      <!-- Caixa de acesso -->
+      <section class="login-box" aria-labelledby="login-title">
+        <h2 id="login-title">Acesse sua conta</h2>
+        <p class="muted mb-0">Escolha o tipo de acesso e entre com seu CPF.</p>
+
+        <div class="access-switch" role="tablist" aria-label="Tipo de acesso">
+          <button type="button" role="tab" id="tab-paciente" aria-selected="true" aria-controls="form-login" data-perfil="paciente">
+            <i data-lucide="heart-pulse" aria-hidden="true"></i> Paciente
+          </button>
+          <button type="button" role="tab" id="tab-profissional" aria-selected="false" aria-controls="form-login" data-perfil="profissional" tabindex="-1">
+            <i data-lucide="stethoscope" aria-hidden="true"></i> Profissional de saúde
+          </button>
+        </div>
+
+        <div class="alert alert-perigo hidden" id="login-erro" role="alert">
+          <i data-lucide="alert-circle" aria-hidden="true"></i><span></span>
+        </div>
+
+        <form id="form-login" novalidate aria-labelledby="login-title">
+          <div class="field">
+            <label for="cpf">CPF <span class="req" aria-hidden="true">*</span></label>
+            <div class="input-icon">
+              <i data-lucide="id-card" aria-hidden="true"></i>
+              <input class="input" id="cpf" name="cpf" type="text" inputmode="numeric" autocomplete="username" placeholder="000.000.000-00" maxlength="14" required aria-describedby="erro-cpf">
+            </div>
+            <span class="field-error" id="erro-cpf" data-erro-de="cpf"></span>
+          </div>
+          <div class="field">
+            <label for="senha">Senha <span class="req" aria-hidden="true">*</span></label>
+            <div class="input-icon password-wrap">
+              <i data-lucide="lock-keyhole" aria-hidden="true"></i>
+              <input class="input" id="senha" name="senha" type="password" autocomplete="current-password" placeholder="Digite sua senha" required aria-describedby="erro-senha">
+              <button type="button" class="btn-icon toggle-pass" id="toggle-senha" aria-label="Mostrar senha" aria-pressed="false"><i data-lucide="eye" aria-hidden="true"></i></button>
+            </div>
+            <span class="field-error" id="erro-senha" data-erro-de="senha"></span>
+          </div>
+          <div class="login-row">
+            <label class="check"><input type="checkbox" id="lembrar" name="lembrar"> Lembrar meu CPF</label>
+            <button type="button" class="link-btn" id="btn-esqueci">Esqueci minha senha</button>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-entrar"><i data-lucide="log-in" aria-hidden="true"></i> Entrar</button>
+        </form>
+
+        <p class="signup" id="signup-line">Ainda não tem acesso? <button type="button" class="link-btn" id="btn-cadastro">Cadastre-se como paciente</button></p>
+        <p class="signup hidden" id="prof-line">Profissionais são cadastrados pelo gestor da unidade. <button type="button" class="link-btn" id="btn-solicitar">Solicitar acesso</button></p>
+
+      </section>
+    </div>
+  </main>
+
+  <footer class="login-footer-bar">
+    <div class="wrap">
+      <span>© 2026 Conecta · Plataforma integrada de saúde pública.</span>
+      <span><button type="button" class="link-light" id="btn-privacidade">Política de privacidade</button></span>
+    </div>
+  </footer>
+</body>
+</html>

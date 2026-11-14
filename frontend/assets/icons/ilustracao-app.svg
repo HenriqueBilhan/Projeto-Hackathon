@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 340" role="img" aria-labelledby="t">
+  <title id="t">Celular com o histórico de saúde do paciente</title>
+  <circle cx="210" cy="170" r="150" fill="#d8eef8"/>
+  <rect x="140" y="30" width="140" height="280" rx="22" fill="#024eae"/>
+  <rect x="150" y="48" width="120" height="244" rx="12" fill="#fff"/>
+  <rect x="150" y="48" width="120" height="40" rx="12" fill="#1267b8"/>
+  <rect x="150" y="72" width="120" height="16" fill="#1267b8"/>
+  <circle cx="168" cy="68" r="8" fill="#fff"/>
+  <rect x="182" y="63" width="56" height="9" rx="4.5" fill="#fff" opacity=".85"/>
+  <g>
+    <line x1="170" y1="104" x2="170" y2="270" stroke="#cbd5e1" stroke-width="2"/>
+    <circle cx="170" cy="112" r="7" fill="#59d9e3"/><rect x="184" y="104" width="72" height="8" rx="4" fill="#1e7bc0"/><rect x="184" y="116" width="50" height="6" rx="3" fill="#cbd5e1"/>
+    <circle cx="170" cy="152" r="7" fill="#37a2cf"/><rect x="184" y="144" width="66" height="8" rx="4" fill="#1e7bc0"/><rect x="184" y="156" width="56" height="6" rx="3" fill="#cbd5e1"/>
+    <circle cx="170" cy="192" r="7" fill="#1e7bc0"/><rect x="184" y="184" width="74" height="8" rx="4" fill="#1e7bc0"/><rect x="184" y="196" width="44" height="6" rx="3" fill="#cbd5e1"/>
+    <circle cx="170" cy="232" r="7" fill="#024eae"/><rect x="184" y="224" width="60" height="8" rx="4" fill="#1e7bc0"/><rect x="184" y="236" width="52" height="6" rx="3" fill="#cbd5e1"/>
+  </g>
+  <g transform="translate(270 92)">
+    <rect width="112" height="58" rx="10" fill="#fff" stroke="#e2e8f0"/>
+    <rect x="12" y="12" width="28" height="28" rx="7" fill="#dcf5ea"/><path d="M19 26 l5 5 l9 -10" stroke="#16865a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="48" y="16" width="52" height="8" rx="4" fill="#0f2440"/><rect x="48" y="30" width="38" height="6" rx="3" fill="#94a3b8"/>
+  </g>
+  <g transform="translate(40 200)">
+    <rect width="118" height="58" rx="10" fill="#fff" stroke="#e2e8f0"/>
+    <rect x="12" y="12" width="28" height="28" rx="7" fill="#e8f2fc"/><path d="M26 18 v8 l5 4" stroke="#1267b8" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="26" cy="26" r="10" stroke="#1267b8" stroke-width="2.5" fill="none"/>
+    <rect x="48" y="16" width="56" height="8" rx="4" fill="#0f2440"/><rect x="48" y="30" width="40" height="6" rx="3" fill="#94a3b8"/>
+  </g>
+</svg>

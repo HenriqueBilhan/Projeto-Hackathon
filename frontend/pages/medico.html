@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública.">
+  <title>Dashboard | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/medico.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/config.js" defer></script>
+  <script src="../js/api.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/exames.js" defer></script>
+  <script src="../js/medico.js" defer></script>
+  <script src="../js/atendimento.js" defer></script>
+</head>
+<body data-page="dashboard" data-roles="medico">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head">
+      <div class="hello" id="saudacao-medico"></div>
+      <form id="busca-rapida" class="inline-search" role="search">
+        <label for="busca-rapida-input" class="sr-only">Busca rápida de paciente</label>
+        <div class="input-icon"><i data-lucide="search" aria-hidden="true"></i><input class="input" id="busca-rapida-input" type="search" placeholder="Buscar paciente por nome, CPF ou CNS"></div>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+      </form>
+    </div>
+    <section aria-labelledby="t-kpi"><h2 id="t-kpi" class="sr-only">Indicadores</h2><div class="grid grid-4" id="cards-medico"></div></section>
+    <div class="grid grid-main section">
+      <div class="stack">
+        <section class="card" aria-labelledby="t-ag"><div class="card-header"><h2 id="t-ag"><i data-lucide="calendar-clock" aria-hidden="true"></i> Agenda de hoje</h2><a class="card-link" href="atendimento.html">Novo atendimento <i data-lucide="plus" aria-hidden="true"></i></a></div><div id="agenda-hoje"></div></section>
+        <section class="card" aria-labelledby="t-up"><div class="card-header"><h2 id="t-up"><i data-lucide="users" aria-hidden="true"></i> Últimos pacientes atendidos</h2><a class="card-link" href="buscar-paciente.html">Buscar paciente <i data-lucide="chevron-right" aria-hidden="true"></i></a></div><div id="ultimos-pacientes"></div></section>
+      </div>
+      <div class="stack">
+        <section class="card" aria-labelledby="t-at"><div class="card-header"><h2 id="t-at"><i data-lucide="zap" aria-hidden="true"></i> Atalhos</h2></div>
+          <nav class="shortcuts" aria-label="Atalhos">
+            <a class="shortcut" href="buscar-paciente.html"><span class="s-ico"><i data-lucide="search" aria-hidden="true"></i></span>Buscar paciente</a>
+            <a class="shortcut" href="atendimento.html"><span class="s-ico"><i data-lucide="stethoscope" aria-hidden="true"></i></span>Registrar atendimento</a>
+            <a class="shortcut" href="solicitar-exame.html"><span class="s-ico"><i data-lucide="flask-conical" aria-hidden="true"></i></span>Solicitar exame</a>
+            <a class="shortcut" href="prescricoes.html"><span class="s-ico"><i data-lucide="pill" aria-hidden="true"></i></span>Prescrever</a>
+            <a class="shortcut" href="encaminhamentos.html"><span class="s-ico"><i data-lucide="send" aria-hidden="true"></i></span>Encaminhar</a>
+            <a class="shortcut" href="rede.html"><span class="s-ico"><i data-lucide="network" aria-hidden="true"></i></span>Rede de atendimento</a>
+          </nav>
+        </section>
+        <section class="card" aria-labelledby="t-nt"><div class="card-header"><h2 id="t-nt"><i data-lucide="bell" aria-hidden="true"></i> Notificações</h2></div><div id="notif-medico"></div></section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

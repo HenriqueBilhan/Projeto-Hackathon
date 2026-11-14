@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública.">
+  <title>Profissionais | Conecta</title>
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/administrador.css">
+  <link rel="stylesheet" href="../css/responsividade.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/config.js" defer></script>
+  <script src="../js/api.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script src="../js/administrador.js" defer></script>
+</head>
+<body data-page="profissionais" data-roles="admin">
+  <!-- Tela de carregamento -->
+  <div class="loader" id="loader" role="status" aria-label="Carregando">
+    <span class="logo-crop"><img src="../assets/img/logo-conecta.png" alt="Conecta"></span>
+    <div class="loader-bar"><span></span></div>
+    <p>Carregando seu ambiente seguro…</p>
+  </div>
+
+  <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
+  <main>
+
+    <div class="page-head"><div><h1>Gerenciamento de profissionais</h1><p>Cadastre profissionais, defina unidade de atuação e especialidade e controle o acesso à plataforma.</p></div><div class="btn-row"><button type="button" class="btn btn-primary" id="btn-novo-prof"><i data-lucide="user-plus" aria-hidden="true"></i> Cadastrar profissional</button></div></div>
+    <section aria-label="Resumo"><div class="grid grid-4" id="pf-resumo"></div></section>
+    <section class="card section" aria-labelledby="t-pf"><div class="card-header"><h2 id="t-pf"><i data-lucide="user-cog" aria-hidden="true"></i> Profissionais cadastrados</h2></div>
+      <form id="filtros-prof" class="filters" role="search">
+        <div class="field"><label for="pf-busca">Buscar</label><input class="input" id="pf-busca" name="busca" type="text" placeholder="Nome ou registro"><span class="field-error" data-erro-de="pf-busca"></span></div>
+        <div class="field"><label for="pf-unidade">Unidade</label><select class="select" id="pf-unidade" name="unidade"><option value="">Todas</option></select></div>
+        <div class="field"><label for="pf-especialidade">Especialidade</label><select class="select" id="pf-especialidade" name="especialidade"><option value="">Todas</option></select></div>
+        <div class="field"><label for="pf-status">Acesso</label><select class="select" id="pf-status" name="status"><option value="">Todos</option><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select></div>
+        <div class="field"><span class="label" aria-hidden="true">&nbsp;</span><button type="reset" class="btn btn-ghost"><i data-lucide="rotate-ccw" aria-hidden="true"></i> Limpar filtros</button></div>
+      </form>
+      <div id="pf-tabela"></div>
+    </section>
+  </main>
+</body>
+</html>
