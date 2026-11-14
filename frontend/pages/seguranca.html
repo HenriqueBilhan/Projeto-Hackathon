@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública.">
   <title>Segurança e privacidade | Conecta</title>
   <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="../css/administrador.css">
   <link rel="stylesheet" href="../css/responsividade.css">
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/config.js" defer></script>
+  <script src="../js/api.js" defer></script>
   <script src="../js/main.js" defer></script>
   <script src="../js/administrador.js" defer></script>
 </head>
@@ -74,15 +76,14 @@
               </ul>
             </section>
             <section class="card" aria-labelledby="t-pv2"><div class="card-header"><h2 id="t-pv2"><i data-lucide="eye-off" aria-hidden="true"></i> Mascaramento de CPF e CNS</h2></div><div id="pv-exemplo" class="table-wrap"></div>
-              <div class="alert alert-info mt-3 mb-0"><i data-lucide="info" aria-hidden="true"></i><span>Nenhum dado real é armazenado: o protótipo usa apenas dados fictícios no navegador.</span></div></section>
+              <div class="alert alert-info mt-3 mb-0"><i data-lucide="info" aria-hidden="true"></i><span>O mascaramento é aplicado pelo servidor: CPF e CNS completos só são enviados ao próprio titular ou a profissionais com a permissão "dados cadastrais", e cada exibição é auditada.</span></div></section>
           </div>
         </div>
         <div data-painel="config" id="painel-config" role="tabpanel" aria-labelledby="tab-config" class="hidden">
           <section class="card" aria-labelledby="t-cf"><div class="card-header"><h2 id="t-cf"><i data-lucide="settings" aria-hidden="true"></i> Configurações da plataforma</h2></div>
             <div id="cf-regras"></div>
             <div class="form-grid mt-2"><div class="field"><label for="cf-sessao">Encerrar sessão por inatividade</label><select class="select" id="cf-sessao"><option value="15">Após 15 minutos</option><option value="30">Após 30 minutos</option><option value="60">Após 60 minutos</option></select></div></div>
-            <div class="alert alert-alerta mt-3"><i data-lucide="database" aria-hidden="true"></i><span>Os dados de demonstração ficam salvos no navegador (LocalStorage). Você pode restaurá-los a qualquer momento.</span></div>
-            <button type="button" class="btn btn-danger" id="cf-reset"><i data-lucide="rotate-ccw" aria-hidden="true"></i> Restaurar dados de demonstração</button>
+            <p class="small muted mt-3 mb-0">As alterações valem imediatamente e ficam registradas na auditoria.</p>
           </section>
         </div>
       </div>

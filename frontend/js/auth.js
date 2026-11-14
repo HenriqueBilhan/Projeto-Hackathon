@@ -1,22 +1,14 @@
 /* ==========================================================================
-   CONECTA — Autenticação (tela inicial)
-   Login demonstrativo por perfil, máscara/validação de CPF, recuperação de
-   senha, cadastro de paciente e atalhos de acesso de demonstração.
-   PONTO DE INTEGRAÇÃO: substituir Conecta.Auth.login por POST /api/auth/login.
+   CONECTA — Autenticação (tela de login)
+   Login real (POST /auth/login), máscara/validação de CPF, recuperação e
+   redefinição de senha e cadastro de paciente (POST /auth/register).
    ========================================================================== */
 (function () {
   "use strict";
   const C = window.Conecta;
   const { qs, qsa, ico, esc } = C;
 
-  /** Credenciais fictícias usadas pelos botões de demonstração. */
-  const DEMO = {
-    paciente: { cpf: "123.456.789-09", senha: "paciente123", perfil: "paciente" },
-    medico: { cpf: "111.444.777-35", senha: "medico123", perfil: "profissional" },
-    admin: { cpf: "529.982.247-25", senha: "admin123", perfil: "profissional" }
-  };
-
-  C.pagina("login", function () {
+  C.pagina("login", async function () {
     // Já autenticado? Vai direto para o painel do perfil.
     const s = C.Auth.sessao();
     if (s && !C.param("expirada")) {
@@ -77,7 +69,7 @@
     function esconderErro() { caixaErro.classList.add("hidden"); }
 
     /* ---- Envio do formulário ---- */
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       esconderErro();
       const ok = C.validarFormulario(form, {
@@ -85,24 +77,19 @@
         senha: (v) => (v.length >= 6 ? "" : "A senha deve ter pelo menos 6 caracteres.")
       });
       if (!ok) return;
-      const r = C.Auth.login(cpf.value, senha.value, perfil);
-      if (r.erro) { mostrarErro(r.erro); senha.focus(); return; }
-      if (qs("#lembrar").checked) C.Store.set("cpfLembrado", C.somenteDigitos(cpf.value)); else C.Store.remove("cpfLembrado");
       const btn = qs("#btn-entrar");
       btn.disabled = true;
       btn.innerHTML = `${ico("loader-2")} Entrando…`;
       C.icones();
+      const r = await C.Auth.login(cpf.value, senha.value, perfil);
+      if (r.erro) {
+        btn.disabled = false; btn.innerHTML = `${ico("log-in")} Entrar`; C.icones();
+        mostrarErro(r.erro); senha.focus(); return;
+      }
+      if (qs("#lembrar").checked) C.Store.set("cpfLembrado", C.somenteDigitos(cpf.value)); else C.Store.remove("cpfLembrado");
       const final = destinoPortal && r.sessao.role === "paciente" ? "pages/" + destinoPortal : r.destino;
       setTimeout(() => { location.href = final; }, 450);
     });
-
-    /* ---- Acessos de demonstração ---- */
-    qsa("[data-demo]").forEach((b) => b.addEventListener("click", () => {
-      const d = DEMO[b.dataset.demo];
-      definirPerfil(d.perfil);
-      cpf.value = d.cpf; senha.value = d.senha;
-      form.requestSubmit();
-    }));
 
     /* ---- Esqueci minha senha ---- */
     qs("#btn-esqueci").addEventListener("click", () => {
@@ -116,15 +103,37 @@
         aoAbrir: (m) => { const c = qs("#rec-cpf", m); c.addEventListener("input", () => { c.value = C.formatarCPF(c.value); }); },
         acoes: [
           { label: "Cancelar", onClick: "fechar" },
-          { label: "Enviar link", classe: "btn-primary", icone: "send", onClick: (fechar, m) => {
+          { label: "Enviar", classe: "btn-primary", icone: "send", onClick: async (fechar, m) => {
             const f = qs("#form-rec", m);
             if (!C.validarFormulario(f, { cpf: (v) => (C.validarCPF(v) ? "" : "CPF inválido."), email: (v) => (/^\S+@\S+\.\S+$/.test(v) ? "" : "E-mail inválido.") })) return;
-            fechar();
-            C.toast("Se os dados estiverem corretos, você receberá um link em instantes (simulação).", "sucesso", "Solicitação enviada");
+            try {
+              const r = await C.Api.post("/auth/forgot-password", C.dadosFormulario(f), { auth: false });
+              fechar();
+              if (r.resetToken) abrirRedefinicao(r.resetToken);
+              else C.toast(r.message, "sucesso", "Solicitação enviada");
+            } catch (err) { C.erroApi(err); }
           } }
         ]
       });
     });
+
+    /** Redefinição de senha com o token recebido (POST /auth/reset-password). */
+    function abrirRedefinicao(token) {
+      C.abrirModal({
+        titulo: "Redefinir senha",
+        corpo: `<div class="alert alert-info">${ico("info")}<span>Ambiente de desenvolvimento: o envio de e-mail não está configurado, por isso o código de redefinição foi gerado aqui.</span></div>
+          <form id="form-reset" class="form-grid" novalidate>
+            <div class="field span-all"><label for="rs-senha">Nova senha</label><input class="input" id="rs-senha" name="novaSenha" type="password" autocomplete="new-password" required><span class="field-hint">Mínimo de 8 caracteres, com letras e números.</span><span class="field-error" data-erro-de="rs-senha"></span></div>
+            <div class="field span-all"><label for="rs-senha2">Confirmar nova senha</label><input class="input" id="rs-senha2" name="confirmacao" type="password" autocomplete="new-password" required><span class="field-error" data-erro-de="rs-senha2"></span></div>
+          </form>`,
+        acoes: [{ label: "Cancelar", onClick: "fechar" }, { label: "Redefinir", classe: "btn-primary", icone: "key-round", onClick: async (fechar, m) => {
+          const f = qs("#form-reset", m); const nova = qs("#rs-senha", m).value;
+          if (!C.validarFormulario(f, { novaSenha: (v) => (v.length >= 8 && /[A-Za-z]/.test(v) && /\d/.test(v) ? "" : "Use 8+ caracteres com letras e números."), confirmacao: (v) => (v === nova ? "" : "As senhas não conferem.") })) return;
+          try { const r = await C.Api.post("/auth/reset-password", { token, novaSenha: nova }, { auth: false }); fechar(); C.toast(r.message, "sucesso", "Senha redefinida"); }
+          catch (err) { C.erroApi(err); }
+        } }]
+      });
+    }
 
     /* ---- Cadastro de paciente ---- */
     qs("#btn-cadastro").addEventListener("click", abrirCadastro);
@@ -156,14 +165,11 @@
         },
         acoes: [
           { label: "Cancelar", onClick: "fechar" },
-          { label: "Criar conta", classe: "btn-primary", icone: "user-plus", onClick: (fechar, m) => {
+          { label: "Criar conta", classe: "btn-primary", icone: "user-plus", onClick: async (fechar, m) => {
             const f = qs("#form-cad", m);
             const senha1 = qs("#cad-senha", m).value;
             const ok = C.validarFormulario(f, {
-              cpf: (v) => {
-                if (!C.validarCPF(v)) return "CPF inválido.";
-                return C.Data.getAll("usuarios").some((u) => u.cpf === C.somenteDigitos(v)) ? "CPF já cadastrado." : "";
-              },
+              cpf: (v) => (C.validarCPF(v) ? "" : "CPF inválido."),
               cns: (v) => (C.somenteDigitos(v).length === 15 ? "" : "O CNS deve ter 15 dígitos."),
               email: (v) => (/^\S+@\S+\.\S+$/.test(v) ? "" : "E-mail inválido."),
               nascimento: (v) => (v && new Date(v) < new Date() ? "" : "Data inválida."),
@@ -174,39 +180,27 @@
             if (!lgpd.checked) { qs('[data-erro-de="cad-lgpd"]', m).textContent = "É necessário aceitar a política de privacidade."; if (ok) lgpd.focus(); return; }
             if (!ok) return;
             const d = C.dadosFormulario(f);
-            const pac = C.Data.add("pacientes", {
-              nome: d.nome.trim(), cpf: C.somenteDigitos(d.cpf), cns: C.somenteDigitos(d.cns), nascimento: d.nascimento, telefone: d.telefone, email: d.email,
-              sexo: "Não informado", tipoSanguineo: "Não informado", alergias: [], cronicas: [], internacoes: [], endereco: "Não informado", unidadeRef: "u2", nomeMae: "—", cadastro: C.hojeISO()
-            }, "p");
-            C.Data.add("usuarios", { cpf: pac.cpf, senha: d.senha, role: "paciente", refId: pac.id }, "us");
+            try {
+              await C.Api.post("/auth/register", {
+                nome: d.nome.trim(), cpf: d.cpf, cns: C.somenteDigitos(d.cns), nascimento: d.nascimento, email: d.email,
+                telefone: d.telefone || undefined, senha: d.senha, aceiteLgpd: true
+              }, { auth: false });
+            } catch (err) { C.erroApi(err, "Cadastro não realizado"); return; }
             fechar();
             definirPerfil("paciente");
-            cpf.value = C.formatarCPF(pac.cpf); senha.value = ""; senha.focus();
+            cpf.value = C.formatarCPF(d.cpf); senha.value = ""; senha.focus();
             C.toast("Conta criada! Digite sua senha para entrar.", "sucesso", "Cadastro concluído");
           } }
         ]
       });
     }
 
-    /* ---- Solicitar acesso profissional ---- */
+    /* ---- Acesso profissional: o cadastro é feito pelo gestor da rede ---- */
     qs("#btn-solicitar").addEventListener("click", () => {
       C.abrirModal({
-        titulo: "Solicitar acesso profissional",
-        corpo: `<p class="muted">A solicitação será encaminhada ao gestor da unidade para validação do registro profissional.</p>
-          <form id="form-sol" class="form-grid" novalidate>
-            <div class="field span-all"><label for="sol-nome">Nome completo</label><input class="input" id="sol-nome" name="nome" required><span class="field-error" data-erro-de="sol-nome"></span></div>
-            <div class="field"><label for="sol-reg">Registro profissional (CRM/COREN)</label><input class="input" id="sol-reg" name="registro" required><span class="field-error" data-erro-de="sol-reg"></span></div>
-            <div class="field"><label for="sol-uni">Unidade</label><select class="select" id="sol-uni" name="unidade" required><option value="">Selecione</option>${C.opcoes(C.Data.getAll("unidades"))}</select><span class="field-error" data-erro-de="sol-uni"></span></div>
-          </form>`,
-        acoes: [
-          { label: "Cancelar", onClick: "fechar" },
-          { label: "Enviar solicitação", classe: "btn-primary", icone: "send", onClick: (fechar, m) => {
-            if (!C.validarFormulario(qs("#form-sol", m))) return;
-            C.notificar("admin:ad1", "Nova solicitação de acesso", `${qs("#sol-nome", m).value} (${qs("#sol-reg", m).value}) solicitou acesso.`, "profissionais.html", "user-plus");
-            fechar();
-            C.toast("Solicitação enviada ao gestor da unidade.", "sucesso");
-          } }
-        ]
+        titulo: "Acesso de profissionais",
+        corpo: `<p>Por segurança, contas de profissionais de saúde são criadas exclusivamente pelo gestor da rede, após validação do registro profissional (CRM/COREN) e do vínculo com a unidade.</p>
+          <ul class="privacy-list"><li>${ico("building-2")} Procure a coordenação da sua unidade de saúde.</li><li>${ico("id-card")} Tenha em mãos CPF, registro profissional e unidade de atuação.</li><li>${ico("key-round")} Você receberá a senha inicial do gestor e poderá redefini-la em "Esqueci minha senha".</li></ul>`
       });
     });
 
@@ -221,14 +215,9 @@
           <li>${ico("eye-off")} CPF e CNS são exibidos de forma <strong>mascarada</strong> sempre que possível.</li>
           <li>${ico("bell")} O paciente é <strong>notificado</strong> quando seu prontuário é acessado.</li>
         </ul>
-        <div class="alert alert-info mb-0">${ico("info")}<span>Este é um protótipo: nenhum dado real é coletado, e a integração com sistemas oficiais é apenas simulada.</span></div>`
+        <div class="alert alert-info mb-0">${ico("info")}<span>Os cadastros de estabelecimentos vêm da API de Dados Abertos do Ministério da Saúde; os registros clínicos são feitos pelas unidades integradas ao Conecta.</span></div>`
       });
     });
 
-    /* ---- Restaurar dados ---- */
-    qs("#btn-reset").addEventListener("click", async () => {
-      const ok = await C.confirmar({ titulo: "Restaurar dados", mensagem: "Todos os registros criados durante a demonstração serão apagados e os dados fictícios originais serão restaurados.", rotulo: "Restaurar", perigo: true });
-      if (ok) { C.Data.reset(); C.toast("Dados de demonstração restaurados."); }
-    });
   });
 })();

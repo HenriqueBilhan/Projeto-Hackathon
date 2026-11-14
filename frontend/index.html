@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="css/portal.css">
   <link rel="stylesheet" href="css/responsividade.css">
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="js/config.js" defer></script>
+  <script src="js/api.js" defer></script>
   <script src="js/main.js" defer></script>
   <script src="js/portal.js" defer></script>
 </head>
@@ -53,8 +55,6 @@
         <ul>
           <li><a href="#inicio" aria-current="page">Início</a></li>
           <li><a href="#como-funciona">Como funciona</a></li>
-          <li><a href="#unidades">Unidades de saúde</a></li>
-          <li><a href="#orientacoes">Orientações</a></li>
           <li><a href="#contato">Ajuda</a></li>
         </ul>
         <div class="nav-actions-mobile">
@@ -124,7 +124,6 @@
           <button type="button" data-slide="2" aria-label="Destaque 3"></button>
         </div>
         <button type="button" class="hero-arrow" id="slide-prox" aria-label="Próximo destaque"><i data-lucide="chevron-right" aria-hidden="true"></i></button>
-        <button type="button" class="hero-arrow" id="slide-pausa" aria-label="Pausar rotação dos destaques"><i data-lucide="pause" aria-hidden="true"></i></button>
       </div>
     </section>
 
@@ -143,7 +142,6 @@
               <li>Histórico de atendimentos em uma linha do tempo</li>
               <li>Resultados de exames e laudos em PDF</li>
               <li>Receitas, medicamentos e próximas consultas</li>
-              <li>Aviso sempre que seu prontuário for acessado</li>
             </ul>
             <a class="link-arrow" href="login.html">Entrar como paciente <i data-lucide="arrow-right" aria-hidden="true"></i></a>
           </article>
@@ -179,7 +177,7 @@
         <header class="section-title">
           <span class="eyebrow">Continuidade do cuidado</span>
           <h2 id="t-como">Como o seu histórico chega até a próxima consulta</h2>
-          <p>Um exemplo real do dia a dia da rede pública, com dados fictícios.</p>
+          <p>Exemplo ilustrativo do dia a dia da rede pública.</p>
         </header>
         <ol class="journey">
           <li><span class="j-n">1</span><span class="j-ico"><i data-lucide="siren" aria-hidden="true"></i></span><h3>Atendimento na UPA</h3><p>Maria chega à UPA com febre. A médica vê no Conecta que ela tem alergia a dipirona.</p></li>
@@ -188,29 +186,6 @@
           <li><span class="j-n">4</span><span class="j-ico"><i data-lucide="smartphone" aria-hidden="true"></i></span><h3>Paciente acompanha</h3><p>Maria vê tudo na área do paciente, incluindo quem acessou seu prontuário.</p></li>
         </ol>
         <div class="center"><a class="btn btn-primary" href="login.html"><i data-lucide="play" aria-hidden="true"></i> Experimentar o protótipo</a></div>
-      </div>
-    </section>
-
-    <!-- ===== Unidades ===== -->
-    <section class="section-block" id="unidades" aria-labelledby="t-unid">
-      <div class="wrap">
-        <header class="section-title row">
-          <div><span class="eyebrow">Rede integrada</span><h2 id="t-unid">Encontre uma unidade de saúde</h2></div>
-        </header>
-        <div class="finder">
-          <div class="field"><label for="un-termo">Nome ou bairro</label><div class="input-icon"><i data-lucide="search" aria-hidden="true"></i><input class="input" id="un-termo" type="search" placeholder="Ex.: Jardim das Flores"></div></div>
-          <div class="chips" id="un-tipos" role="group" aria-label="Tipo de unidade"></div>
-        </div>
-        <p class="filter-count" id="un-contagem" aria-live="polite"></p>
-        <div class="unit-list" id="un-lista"></div>
-      </div>
-    </section>
-
-    <!-- ===== Orientações ===== -->
-    <section class="section-block alt" id="orientacoes" aria-labelledby="t-ori">
-      <div class="wrap">
-        <header class="section-title"><span class="eyebrow">Fique por dentro</span><h2 id="t-ori">Orientações e novidades</h2></header>
-        <div class="news-grid" id="noticias"></div>
       </div>
     </section>
 
@@ -232,21 +207,14 @@
             <details><summary>Preciso me cadastrar para usar o Conecta?</summary><p>Sim. Na Área do paciente, clique em “Cadastre-se como paciente” e informe CPF, CNS e data de nascimento.</p></details>
             <details><summary>Qualquer profissional pode ver meu histórico?</summary><p>Não. Apenas profissionais autorizados e vinculados a unidades integradas, durante o atendimento. Cada acesso fica registrado.</p></details>
             <details><summary>Como vejo o resultado de um exame?</summary><p>Entre na Área do paciente e abra “Meus exames”. Resultados liberados podem ser visualizados e salvos em PDF.</p></details>
-            <details><summary>O Conecta substitui o Cartão SUS?</summary><p>Não. O Conecta é um protótipo de integração de informações e usa o número do CNS apenas para identificar o paciente.</p></details>
+            <details><summary>O Conecta substitui o Cartão SUS?</summary><p>Não. O Conecta integra informações entre as unidades da rede e usa o número do CNS apenas para identificar o paciente.</p></details>
           </div>
         </div>
         <aside class="contact-card" aria-labelledby="t-fale">
-          <h2 id="t-fale">Fale com a gente</h2>
-          <ul class="contact-list">
-            <li><i data-lucide="phone" aria-hidden="true"></i><span><strong>0800 000 0000</strong>Central fictícia · seg. a sex., 8h às 18h</span></li>
-            <li><i data-lucide="mail" aria-hidden="true"></i><span><strong>contato@conecta.demo</strong>Resposta em até 2 dias úteis</span></li>
-          </ul>
-          <form id="form-contato" class="form-grid" novalidate>
-            <div class="field span-all"><label for="ct-nome">Nome</label><input class="input" id="ct-nome" name="nome" required autocomplete="name"><span class="field-error" data-erro-de="ct-nome"></span></div>
-            <div class="field span-all"><label for="ct-email">E-mail</label><input class="input" id="ct-email" name="email" type="email" required autocomplete="email"><span class="field-error" data-erro-de="ct-email"></span></div>
-            <div class="field span-all"><label for="ct-msg">Mensagem</label><textarea class="textarea" id="ct-msg" name="mensagem" rows="3" required></textarea><span class="field-error" data-erro-de="ct-msg"></span></div>
-            <div class="span-all"><button type="submit" class="btn btn-primary btn-block"><i data-lucide="send" aria-hidden="true"></i> Enviar mensagem</button></div>
-          </form>
+          <h2 id="t-fale">Precisa de atendimento?</h2>
+          <p>O atendimento ao paciente é feito pela sua unidade de saúde. Use a busca de unidades para encontrar endereço, telefone e horário de funcionamento.</p>
+          <a class="btn btn-primary btn-block" href="#unidades"><i data-lucide="map-pin" aria-hidden="true"></i> Encontrar minha unidade</a>
+          <a class="btn btn-outline btn-block mt-2" href="login.html"><i data-lucide="user-round" aria-hidden="true"></i> Acessar a área do paciente</a>
         </aside>
       </div>
     </section>
@@ -271,16 +239,15 @@
         <li><a href="login.html?perfil=profissional">Gestão da rede</a></li>
         <li><a href="#como-funciona">Como funciona</a></li>
       </ul></nav>
-      <div><h2>Atendimento</h2><ul class="footer-contact">
-        <li><i data-lucide="phone" aria-hidden="true"></i> 0800 000 0000</li>
-        <li><i data-lucide="mail" aria-hidden="true"></i> contato@conecta.demo</li>
-        <li><i data-lucide="clock" aria-hidden="true"></i> Seg. a sex., 8h às 18h</li>
+      <div><h2>Dados abertos</h2><ul>
+        <li><a href="https://apidadosabertos.saude.gov.br/v1/" rel="noopener" target="_blank">API de Dados Abertos — Ministério da Saúde</a></li>
+        <li><a href="#como-funciona">Integração entre unidades</a></li>
       </ul></div>
     </div>
     <div class="footer-bottom">
       <div class="wrap">
-        <span>© 2026 Conecta · Protótipo com dados fictícios. Integração com o SUS simulada.</span>
-        <span><button type="button" class="link-light" data-privacidade>Política de privacidade</button> · <button type="button" class="link-light" id="btn-reset">Restaurar dados de demonstração</button></span>
+        <span>© 2026 Conecta · Plataforma integrada de saúde pública.</span>
+        <span><button type="button" class="link-light" data-privacidade>Política de privacidade</button></span>
       </div>
     </div>
   </footer>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública.">
   <title>Relatórios | Conecta</title>
   <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="../css/responsividade.css">
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <script src="../js/config.js" defer></script>
+  <script src="../js/api.js" defer></script>
   <script src="../js/main.js" defer></script>
   <script src="../js/administrador.js" defer></script>
 </head>
@@ -29,7 +31,7 @@
   <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
   <main>
 
-    <div class="page-head"><div><h1>Relatórios</h1><p>Indicadores visuais de atendimentos, exames e pacientes na rede (dados demonstrativos).</p></div><div class="btn-row no-print"><div class="field"><label for="rel-periodo" class="sr-only">Período</label><select class="select" id="rel-periodo"><option value="6">Últimos 6 meses</option><option value="3">Últimos 3 meses</option></select></div><button type="button" class="btn btn-outline" id="rel-imprimir"><i data-lucide="printer" aria-hidden="true"></i> Imprimir</button><button type="button" class="btn btn-primary" id="rel-csv"><i data-lucide="download" aria-hidden="true"></i> Exportar CSV</button></div></div>
+    <div class="page-head"><div><h1>Relatórios</h1><p>Indicadores calculados a partir dos registros da rede Conecta.</p></div><div class="btn-row no-print"><div class="field"><label for="rel-periodo" class="sr-only">Período</label><select class="select" id="rel-periodo"><option value="6">Últimos 6 meses</option><option value="3">Últimos 3 meses</option><option value="12">Últimos 12 meses</option></select></div><button type="button" class="btn btn-outline" id="rel-imprimir"><i data-lucide="printer" aria-hidden="true"></i> Imprimir</button><button type="button" class="btn btn-primary" id="rel-csv"><i data-lucide="download" aria-hidden="true"></i> Exportar CSV</button></div></div>
     <section aria-label="Totais do período"><div class="grid grid-4" id="rel-kpis"></div></section>
     <div class="grid grid-2 section">
       <section class="card" aria-labelledby="t-r1"><div class="card-header"><h2 id="t-r1"><i data-lucide="building-2" aria-hidden="true"></i> Atendimentos por unidade</h2></div><div class="chart-box lg"><canvas id="r-unidades" role="img" aria-label="Barras: atendimentos por unidade no período"></canvas></div></section>

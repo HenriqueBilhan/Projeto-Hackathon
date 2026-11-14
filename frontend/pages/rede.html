@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública.">
   <title>Rede de Atendimento | Conecta</title>
   <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="../css/dashboard.css">
   <link rel="stylesheet" href="../css/responsividade.css">
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/config.js" defer></script>
+  <script src="../js/api.js" defer></script>
   <script src="../js/main.js" defer></script>
   <script src="../js/rede.js" defer></script>
 </head>
@@ -28,7 +30,7 @@
   <main>
 
     <div class="page-head"><div><h1 id="rede-titulo">Rede de Atendimento</h1><p id="rede-sub">Veja como os dados clínicos acompanham o paciente entre as unidades de saúde integradas.</p></div></div>
-    <div class="alert alert-info"><i data-lucide="info" aria-hidden="true"></i><span><strong>Demonstração:</strong> a integração entre unidades e com o SUS é simulada no navegador, com dados fictícios. Não há conexão com sistemas oficiais.</span></div>
+    <div class="alert alert-info"><i data-lucide="info" aria-hidden="true"></i><span>O mapa e a sequência ao lado são um <strong>exemplo ilustrativo</strong> do fluxo de informações. As unidades listadas abaixo e o painel de integração usam os dados reais da rede e da API de Dados Abertos do Ministério da Saúde.</span></div>
     <div class="network-layout">
       <section class="card" aria-labelledby="t-diag">
         <div class="card-header"><h2 id="t-diag"><i data-lucide="network" aria-hidden="true"></i> Mapa da integração</h2><span class="small muted">Clique em uma unidade para listá-la</span></div>
@@ -60,7 +62,7 @@
       <div class="dir-grid" id="lista-unidades"></div>
     </section>
     <section class="card section" id="painel-integracao" aria-labelledby="t-int">
-      <div class="card-header"><h2 id="t-int"><i data-lucide="plug-zap" aria-hidden="true"></i> Status das integrações (simulado)</h2><button type="button" class="btn btn-outline btn-sm" id="btn-sincronizar"><i data-lucide="refresh-cw" aria-hidden="true"></i> Sincronizar agora</button></div>
+      <div class="card-header"><h2 id="t-int"><i data-lucide="plug-zap" aria-hidden="true"></i> Integração com a API de Dados Abertos do Ministério da Saúde</h2><button type="button" class="btn btn-outline btn-sm" id="btn-sincronizar"><i data-lucide="refresh-cw" aria-hidden="true"></i> Sincronizar agora</button></div>
       <div id="tabela-integracao"></div>
     </section>
   </main>

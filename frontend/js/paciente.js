@@ -2,6 +2,8 @@
    CONECTA — Área do paciente (paciente.js)
    Visão geral, histórico médico, consultas, receitas/medicamentos,
    meu perfil e ajuda. Os exames ficam em exames.js.
+   Todos os dados vêm da API (GET /patients/me, /attendances, /appointments,
+   /prescriptions, /exams, /patients/{id}/access-logs).
    ========================================================================== */
 (function () {
   "use strict";
@@ -15,17 +17,25 @@
   const porDataAsc = (a, b) => a.data.localeCompare(b.data);
   const FUTURAS = ["Agendada", "Confirmada"];
   const ATIVOS = ["Em uso", "Uso contínuo"];
+  const Api = C.Api;
+
+  /** Carrega o próprio cadastro (com resumo clínico) para o cache. */
+  async function carregarEu() { const p = await Api.get("/patients/me"); D.set("pacientes", [p]); return p; }
 
   /* ------------------------------------------------------------------------
      Visão geral
      ------------------------------------------------------------------------ */
-  C.pagina("visao-geral", function (s) {
-    const p = D.paciente(s.refId);
+  C.pagina("visao-geral", async function (s) {
+    const [p] = await Promise.all([
+      carregarEu(), D.fetch("atendimentos", "/attendances", { limit: 200 }), D.fetch("exames", "/exams", { limit: 200 }),
+      D.fetch("consultas", "/appointments", { limit: 200 }), D.fetch("prescricoes", "/prescriptions", { limit: 200 }),
+      D.fetch("acessos", `/patients/${s.refId}/access-logs`, { limit: 4 })
+    ]);
     const atend = doPaciente("atendimentos", p.id).filter((a) => a.status === "Finalizado").sort(porDataDesc);
     const exames = doPaciente("exames", p.id);
     const proximas = doPaciente("consultas", p.id).filter((c) => FUTURAS.includes(c.status)).sort(porDataAsc);
     const meds = doPaciente("prescricoes", p.id).filter((r) => ATIVOS.includes(r.status));
-    const naoLidas = D.where("notificacoes", (n) => n.para === `paciente:${p.id}` && !n.lida).length;
+    const naoLidas = D.where("notificacoes", (n) => !n.lida).length;
 
     qs("#boas-vindas").innerHTML = `
       <span class="avatar lg">${esc(C.iniciais(p.nome))}</span>
@@ -81,16 +91,16 @@
     }).join("")}</ul>` : `<div class="empty">${ico("calendar-x")}<span>Nenhuma consulta agendada.</span></div>`;
 
     // Quem acessou meu prontuário (transparência LGPD)
-    const acessos = D.where("auditoria", (l) => l.pacienteId === p.id && l.perfil !== "Paciente").sort(porDataDesc).slice(0, 4);
+    const acessos = D.getAll("acessos").slice(0, 4);
     qs("#acessos-prontuario").innerHTML = `<ul class="list">${acessos.map((l) => `<li class="list-item"><span class="li-ico">${ico(l.operacao.includes("negada") ? "shield-x" : "eye")}</span><span class="li-main"><span class="li-title">${esc(l.usuario)}</span><span class="li-sub">${esc(l.operacao)} · ${esc(l.unidadeId ? D.unidade(l.unidadeId).nome : "—")} · ${esc(C.fmtDataHora(l.data))}</span></span></li>`).join("") || '<li class="muted small">Nenhum acesso registrado.</li>'}</ul>`;
   }, "paciente");
 
   /* ------------------------------------------------------------------------
      Meu histórico médico (linha do tempo)
      ------------------------------------------------------------------------ */
-  C.pagina("historico", function (s) {
+  C.pagina("historico", async function (s) {
+    await Promise.all([carregarEu(), D.fetch("atendimentos", `/patients/${s.refId}/history`)]);
     const todos = doPaciente("atendimentos", s.refId).filter((a) => a.status === "Finalizado").sort(porDataDesc);
-    C.registrarAuditoria("Consulta ao próprio histórico", { pacienteId: s.refId });
     const selUni = qs("#h-unidade");
     selUni.insertAdjacentHTML("beforeend", C.opcoes([...new Set(todos.map((a) => a.unidadeId))].map((id) => D.unidade(id))));
     const selTipo = qs("#h-tipo");
@@ -124,7 +134,8 @@
   /* ------------------------------------------------------------------------
      Minhas consultas
      ------------------------------------------------------------------------ */
-  C.pagina("consultas", function (s) {
+  C.pagina("consultas", async function (s) {
+    await D.fetch("consultas", "/appointments", { limit: 500 });
     const form = qs("#filtros-consultas");
     const todas = () => doPaciente("consultas", s.refId);
     qs("#c-especialidade").insertAdjacentHTML("beforeend", [...new Set(todas().map((c) => c.especialidade))].map((e) => `<option>${esc(e)}</option>`).join(""));
@@ -176,29 +187,43 @@
       if (can) {
         const c = D.getById("consultas", can.dataset.cancelar);
         const ok = await C.confirmar({ titulo: "Cancelar consulta", mensagem: `Deseja cancelar a consulta de ${c.especialidade} em ${C.fmtDataHora(c.data)}? A vaga será liberada para outro paciente.`, rotulo: "Cancelar consulta", perigo: true });
-        if (ok) { D.update("consultas", c.id, { status: "Cancelada" }); render(); C.toast("Consulta cancelada com sucesso."); }
+        if (ok) {
+          try { D.put("consultas", await Api.del(`/appointments/${c.id}`)); render(); C.toast("Consulta cancelada com sucesso."); }
+          catch (err) { C.erroApi(err); }
+        }
       }
     });
 
-    // Solicitar agendamento
+    // Solicitar agendamento: especialidades reais dos profissionais ativos de cada unidade
     qs("#btn-agendar").addEventListener("click", () => {
-      const unidades = D.getAll("unidades").filter((u) => u.tipo === "UBS" || u.tipo === "Clínica");
+      const especialidadesDe = (uid) => [...new Set(D.where("profissionais", (p) => p.unidadeId === uid && p.ativo && ["Médico", "Enfermeiro"].includes(p.cargo)).map((p) => p.especialidade))].sort();
+      const unidades = D.where("unidades", (u) => u.ativa !== false && (u.tipo === "UBS" || u.tipo === "Clínica") && especialidadesDe(u.id).length);
+      if (!unidades.length) { C.toast("Ainda não há unidades com agenda disponível na rede.", "alerta"); return; }
       C.abrirModal({
         titulo: "Solicitar agendamento",
         corpo: `<form id="form-agendar" class="form-grid" novalidate>
-          <div class="field span-all"><label for="ag-esp">Especialidade</label><select class="select" id="ag-esp" name="especialidade" required><option value="">Selecione</option>${["Clínica Médica", "Medicina de Família", "Cardiologia", "Endocrinologia", "Ginecologia e Obstetrícia", "Enfermagem"].map((e) => `<option>${e}</option>`).join("")}</select><span class="field-error" data-erro-de="ag-esp"></span></div>
           <div class="field span-all"><label for="ag-uni">Unidade</label><select class="select" id="ag-uni" name="unidade" required><option value="">Selecione</option>${C.opcoes(unidades)}</select><span class="field-error" data-erro-de="ag-uni"></span></div>
+          <div class="field span-all"><label for="ag-esp">Especialidade</label><select class="select" id="ag-esp" name="especialidade" required disabled><option value="">Escolha a unidade primeiro</option></select><span class="field-error" data-erro-de="ag-esp"></span></div>
           <div class="field"><label for="ag-data">Data preferida</label><input class="input" type="date" id="ag-data" name="data" required min="${C.hojeISO()}"><span class="field-error" data-erro-de="ag-data"></span></div>
-          <div class="field"><label for="ag-hora">Período</label><select class="select" id="ag-hora" name="hora"><option value="08:00">Manhã</option><option value="14:00">Tarde</option></select></div>
-        </form><p class="small muted mt-2 mb-0">A unidade confirmará o horário pelo aplicativo (simulação).</p>`,
-        acoes: [{ label: "Cancelar", onClick: "fechar" }, { label: "Solicitar", classe: "btn-primary", icone: "calendar-plus", onClick: (fechar, m) => {
+          <div class="field"><label for="ag-hora">Horário</label><select class="select" id="ag-hora" name="hora">${["08:00", "09:00", "10:00", "11:00", "14:00", "15:00", "16:00"].map((h) => `<option>${h}</option>`).join("")}</select></div>
+        </form><p class="small muted mt-2 mb-0">A consulta fica "Agendada" e a unidade pode confirmá-la ou propor outro horário.</p>`,
+        aoAbrir: (m) => {
+          const uni = qs("#ag-uni", m); const esp = qs("#ag-esp", m);
+          uni.addEventListener("change", () => {
+            const lista = especialidadesDe(uni.value);
+            esp.disabled = !lista.length;
+            esp.innerHTML = lista.length ? `<option value="">Selecione</option>${lista.map((e) => `<option>${esc(e)}</option>`).join("")}` : `<option value="">Sem especialidades disponíveis</option>`;
+          });
+        },
+        acoes: [{ label: "Cancelar", onClick: "fechar" }, { label: "Solicitar", classe: "btn-primary", icone: "calendar-plus", onClick: async (fechar, m) => {
           const f = qs("#form-agendar", m);
           if (!C.validarFormulario(f, { data: (v) => (v >= C.hojeISO() ? "" : "Escolha uma data futura.") })) return;
           const d = C.dadosFormulario(f);
-          const prof = D.getAll("profissionais").find((p) => p.unidadeId === d.unidade && p.ativo) || D.profissional("pr1");
-          D.add("consultas", { pacienteId: s.refId, data: `${d.data}T${d.hora}`, unidadeId: d.unidade, profissionalId: prof.id, especialidade: d.especialidade, status: "Agendada", tipo: "Solicitação pelo app" }, "c");
-          fechar(); ativar("proximas"); render();
-          C.toast("Solicitação de agendamento registrada.", "sucesso");
+          try {
+            D.put("consultas", await Api.post("/appointments", { unidadeId: d.unidade, especialidade: d.especialidade, data: `${d.data}T${d.hora}` }));
+            fechar(); ativar("proximas"); render();
+            C.toast("Consulta agendada. Acompanhe a confirmação pela unidade.", "sucesso");
+          } catch (err) { C.erroApi(err, "Agendamento não realizado"); }
         } }]
       });
     });
@@ -208,8 +233,8 @@
   /* ------------------------------------------------------------------------
      Minhas receitas e Meus medicamentos
      ------------------------------------------------------------------------ */
-  C.pagina("receitas", function (s) {
-    const p = D.paciente(s.refId);
+  C.pagina("receitas", async function (s) {
+    const [p] = await Promise.all([carregarEu(), D.fetch("prescricoes", "/prescriptions", { limit: 500 })]);
     const todas = doPaciente("prescricoes", s.refId).sort(porDataDesc);
     const form = qs("#filtros-receitas");
 
@@ -267,8 +292,9 @@
   /* ------------------------------------------------------------------------
      Meu perfil (perfil-paciente.html acessado pelo paciente)
      ------------------------------------------------------------------------ */
-  C.pagina("perfil", function (s) {
+  C.pagina("perfil", async function (s) {
     qs("#visao-medico").remove();
+    await Promise.all([carregarEu(), D.fetch("acessos", `/patients/${s.refId}/access-logs`, { limit: 50 })]);
     qs("#visao-paciente").classList.remove("hidden");
     document.title = "Meu perfil | Conecta";
     const t = qs(".topbar-title strong"); if (t) t.textContent = "Meu perfil";
@@ -276,7 +302,7 @@
 
     function render() {
       const p = D.paciente(s.refId);
-      const cfg = C.Store.get("prefsPaciente", { notificarAcesso: true, compartilhar: true });
+      const cfg = p.preferencias || { notificarAcesso: true, compartilhar: true };
       qs("#perfil-cabecalho").innerHTML = `
         <span class="avatar xl">${esc(C.iniciais(p.nome))}</span>
         <div class="li-main"><h1 class="mb-0">${esc(p.nome)}</h1><p class="muted mb-0">Paciente desde ${esc(C.fmtData(p.cadastro))} · Unidade de referência: ${esc(D.unidade(p.unidadeRef).nome)}</p></div>
@@ -303,9 +329,9 @@
       qs("#perfil-privacidade").innerHTML = `
         <label class="switch pref"><input type="checkbox" data-pref="notificarAcesso" ${cfg.notificarAcesso ? "checked" : ""}><span class="track"></span><span><strong>Avisar quando meu prontuário for acessado</strong><span class="li-sub">Receba uma notificação a cada consulta ao seu histórico.</span></span></label>
         <label class="switch pref"><input type="checkbox" data-pref="compartilhar" ${cfg.compartilhar ? "checked" : ""}><span class="track"></span><span><strong>Compartilhar histórico entre unidades da rede</strong><span class="li-sub">Permite que profissionais autorizados vejam seus atendimentos anteriores.</span></span></label>`;
-      const acessos = D.where("auditoria", (l) => l.pacienteId === p.id).sort(porDataDesc).slice(0, 8);
+      const acessos = D.getAll("acessos");
       C.tabela(qs("#perfil-acessos"), {
-        rotulo: "Acessos ao meu prontuário", linhas: acessos,
+        rotulo: "Acessos ao meu prontuário", linhas: acessos, vazio: "Nenhum acesso de profissionais registrado até o momento.",
         colunas: [
           { titulo: "Quem acessou", render: (l) => `<span class="cell-strong">${esc(l.usuario)}</span><span class="cell-sub">${esc(l.perfil)}</span>` },
           { titulo: "Unidade", render: (l) => esc(l.unidadeId ? D.unidade(l.unidadeId).nome : "—") },
@@ -320,16 +346,19 @@
       if (e.target.closest("#btn-docs")) { mostrarDocs = !mostrarDocs; render(); }
       if (e.target.closest("#btn-editar")) editar();
     });
-    qs("#visao-paciente").addEventListener("change", (e) => {
+    async function salvarPreferencia(chave, valor) {
+      try { D.set("pacientes", [await Api.patch(`/patients/${s.refId}`, { preferencias: { [chave]: valor } })]); return true; }
+      catch (err) { C.erroApi(err); return false; }
+    }
+    qs("#visao-paciente").addEventListener("change", async (e) => {
       const cb = e.target.closest("[data-pref]"); if (!cb) return;
-      const cfg = C.Store.get("prefsPaciente", { notificarAcesso: true, compartilhar: true });
       if (cb.dataset.pref === "compartilhar" && !cb.checked) {
-        C.confirmar({ titulo: "Restringir compartilhamento", mensagem: "Sem o compartilhamento, profissionais de outras unidades não verão seu histórico, o que pode dificultar atendimentos de urgência. Deseja continuar?", rotulo: "Restringir", perigo: true })
-          .then((ok) => { if (ok) { cfg.compartilhar = false; C.Store.set("prefsPaciente", cfg); C.toast("Compartilhamento restrito (exceto emergências).", "alerta"); } else cb.checked = true; });
+        const ok = await C.confirmar({ titulo: "Restringir compartilhamento", mensagem: "Sem o compartilhamento, profissionais de outras unidades não verão seu histórico (exceto em acesso de emergência justificado e auditado). Deseja continuar?", rotulo: "Restringir", perigo: true });
+        if (!ok) { cb.checked = true; return; }
+        if (await salvarPreferencia("compartilhar", false)) C.toast("Compartilhamento restrito às unidades onde você é atendido(a).", "alerta"); else cb.checked = true;
         return;
       }
-      cfg[cb.dataset.pref] = cb.checked; C.Store.set("prefsPaciente", cfg);
-      C.toast("Preferência de privacidade atualizada.");
+      if (await salvarPreferencia(cb.dataset.pref, cb.checked)) C.toast("Preferência de privacidade atualizada."); else cb.checked = !cb.checked;
     });
 
     function editar() {
@@ -337,16 +366,16 @@
       C.abrirModal({
         titulo: "Editar dados de contato",
         corpo: `<form id="form-edit" class="form-grid" novalidate>
-          <div class="field"><label for="ed-tel">Telefone</label><input class="input" id="ed-tel" name="telefone" value="${esc(p.telefone)}" required><span class="field-error" data-erro-de="ed-tel"></span></div>
-          <div class="field"><label for="ed-email">E-mail</label><input class="input" id="ed-email" type="email" name="email" value="${esc(p.email)}" required><span class="field-error" data-erro-de="ed-email"></span></div>
-          <div class="field span-all"><label for="ed-end">Endereço</label><input class="input" id="ed-end" name="endereco" value="${esc(p.endereco)}" required><span class="field-error" data-erro-de="ed-end"></span></div>
+          <div class="field"><label for="ed-tel">Telefone</label><input class="input" id="ed-tel" name="telefone" value="${esc(p.telefone || "")}" required><span class="field-error" data-erro-de="ed-tel"></span></div>
+          <div class="field"><label for="ed-email">E-mail</label><input class="input" id="ed-email" type="email" name="email" value="${esc(p.email || "")}" required><span class="field-error" data-erro-de="ed-email"></span></div>
+          <div class="field span-all"><label for="ed-end">Endereço</label><input class="input" id="ed-end" name="endereco" value="${esc(p.endereco === "Não informado" ? "" : p.endereco)}" required><span class="field-error" data-erro-de="ed-end"></span></div>
           <div class="field span-all"><label for="ed-emerg">Contato de emergência</label><input class="input" id="ed-emerg" name="contatoEmergencia" value="${esc(p.contatoEmergencia || "")}"></div>
         </form><p class="small muted mt-2 mb-0">Nome, CPF, CNS e data de nascimento só podem ser alterados presencialmente na unidade de saúde.</p>`,
-        acoes: [{ label: "Cancelar", onClick: "fechar" }, { label: "Salvar", classe: "btn-primary", icone: "save", onClick: (fechar, m) => {
+        acoes: [{ label: "Cancelar", onClick: "fechar" }, { label: "Salvar", classe: "btn-primary", icone: "save", onClick: async (fechar, m) => {
           const f = qs("#form-edit", m);
           if (!C.validarFormulario(f, { email: (v) => (/^\S+@\S+\.\S+$/.test(v) ? "" : "E-mail inválido."), telefone: (v) => (C.somenteDigitos(v).length >= 10 ? "" : "Telefone inválido.") })) return;
-          D.update("pacientes", p.id, C.dadosFormulario(f));
-          fechar(); render(); C.toast("Seus dados foram atualizados.");
+          try { D.set("pacientes", [await Api.patch(`/patients/${p.id}`, C.dadosFormulario(f))]); fechar(); render(); C.toast("Seus dados foram atualizados."); }
+          catch (err) { C.erroApi(err); }
         } }]
       });
     }
@@ -356,23 +385,25 @@
   /* ------------------------------------------------------------------------
      Ajuda e suporte
      ------------------------------------------------------------------------ */
-  C.pagina("ajuda", function (s) {
+  C.pagina("ajuda", async function (s) {
+    const p = await carregarEu();
     const busca = qs("#busca-faq");
     busca.addEventListener("input", () => {
       const t = busca.value.toLowerCase(); let n = 0;
       qsa(".faq details").forEach((d) => { const ok = d.textContent.toLowerCase().includes(t); d.classList.toggle("hidden", !ok); if (ok) n++; });
       qs("#faq-vazio").classList.toggle("hidden", n > 0);
     });
-    const form = qs("#form-suporte");
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      if (!C.validarFormulario(form, { mensagem: (v) => (v.trim().length >= 10 ? "" : "Descreva sua dúvida com pelo menos 10 caracteres.") })) return;
-      const protocolo = `CN-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 899999)}`;
-      C.notificar(`paciente:${s.refId}`, "Chamado aberto", `Seu chamado ${protocolo} foi recebido. Resposta em até 2 dias úteis.`, "ajuda.html", "life-buoy");
-      C.atualizarContadorNotificacoes(s);
-      form.reset();
-      C.abrirModal({ titulo: "Chamado registrado", tamanho: "sm", corpo: `<div class="empty">${ico("check-circle-2")}<p class="mb-0">Recebemos sua mensagem.<br>Protocolo <strong>${protocolo}</strong></p></div>` });
-    });
-    qsa("[data-canal]").forEach((b) => b.addEventListener("click", () => C.toast(`Canal "${b.dataset.canal}" indisponível no protótipo — use o formulário ao lado.`, "info")));
+    // Canal real: a unidade de referência do paciente (dados do cadastro da rede).
+    const u = p.unidadeRef ? D.unidade(p.unidadeRef) : null;
+    qs("#contato-unidade").innerHTML = u && u.nome !== "Unidade" ? `
+      <p class="mb-0"><strong>${esc(u.nome)}</strong> ${tipoTag(u.tipo)}</p>
+      <ul class="privacy-list mt-2">
+        <li>${ico("map-pin")} ${esc(u.endereco)}</li>
+        <li>${ico("phone")} ${esc(u.telefone)}</li>
+        <li>${ico("clock")} ${esc(u.horario)}</li>
+      </ul>
+      <p class="small muted mb-0">Para corrigir informações do seu histórico ou dúvidas sobre atendimentos, procure a recepção da unidade.</p>`
+      : `<p class="muted mb-0">Sua unidade de referência ainda não foi definida. Ela é registrada no seu primeiro atendimento na rede.</p>
+         <a class="btn btn-outline btn-sm mt-2" href="rede.html">${ico("building-2")} Ver unidades da rede</a>`;
   }, "paciente");
 })();

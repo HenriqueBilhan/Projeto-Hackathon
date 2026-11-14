@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública.">
   <title>Ajuda e suporte | Conecta</title>
   <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="../css/paciente.css">
   <link rel="stylesheet" href="../css/responsividade.css">
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/config.js" defer></script>
+  <script src="../js/api.js" defer></script>
   <script src="../js/main.js" defer></script>
   <script src="../js/exames.js" defer></script>
   <script src="../js/paciente.js" defer></script>
@@ -39,26 +41,20 @@
           <details><summary>Quem pode ver meu histórico médico?</summary><p>Somente profissionais de saúde autorizados e vinculados a unidades integradas, durante o seu atendimento. Todo acesso é registrado e você pode ver quem acessou em “Meu perfil”.</p></details>
           <details><summary>Como baixo o resultado de um exame?</summary><p>Em “Meus exames”, clique em “Baixar PDF” no exame desejado. Na janela de impressão, escolha “Salvar como PDF”.</p></details>
           <details><summary>Posso impedir o compartilhamento entre unidades?</summary><p>Sim. Em “Meu perfil &gt; Privacidade e compartilhamento” você pode restringir o compartilhamento. Em emergências, o acesso pode ocorrer com justificativa registrada.</p></details>
-          <details><summary>Encontrei uma informação errada no meu histórico. O que faço?</summary><p>Abra um chamado ao lado informando o registro. A unidade responsável será notificada para revisar a informação.</p></details>
+          <details><summary>Encontrei uma informação errada no meu histórico. O que faço?</summary><p>Procure a unidade que registrou o atendimento (ela aparece em cada registro do histórico) ou a sua unidade de referência, indicada ao lado.</p></details>
           <details><summary>Como cancelo uma consulta?</summary><p>Em “Minhas consultas”, aba “Próximas”, clique em “Cancelar” na consulta desejada e confirme.</p></details>
-          <details><summary>O Conecta está ligado aos sistemas oficiais do SUS?</summary><p>Este é um protótipo demonstrativo: a integração é simulada e todos os dados exibidos são fictícios.</p></details>
+          <details><summary>De onde vêm os dados das unidades de saúde?</summary><p>Os cadastros de estabelecimentos são importados da API de Dados Abertos do Ministério da Saúde (CNES). Seu histórico clínico é registrado pelas unidades integradas ao Conecta.</p></details>
         </div>
         <div class="empty hidden" id="faq-vazio"><i data-lucide="search-x" aria-hidden="true"></i><span>Nenhuma pergunta encontrada.</span></div>
       </section>
       <div class="stack">
-        <section class="card" aria-labelledby="t-sup">
-          <div class="card-header"><h2 id="t-sup"><i data-lucide="message-square" aria-hidden="true"></i> Fale com o suporte</h2></div>
-          <form id="form-suporte" class="form-grid" novalidate>
-            <div class="field span-all"><label for="sp-assunto">Assunto <span class="req" aria-hidden="true">*</span></label><select class="select" id="sp-assunto" name="assunto" required><option value="">Selecione</option><option value="Dúvida sobre exames">Dúvida sobre exames</option><option value="Problema de acesso">Problema de acesso</option><option value="Correção de informação">Correção de informação</option><option value="Privacidade e dados">Privacidade e dados</option><option value="Outro">Outro</option></select><span class="field-error" data-erro-de="sp-assunto"></span></div>
-            <div class="field span-all"><label for="sp-mensagem">Mensagem <span class="req" aria-hidden="true">*</span></label><textarea class="textarea" id="sp-mensagem" name="mensagem" rows="4" placeholder="Descreva sua dúvida" required></textarea><span class="field-error" data-erro-de="sp-mensagem"></span></div>
-            <div class="span-all"><button type="submit" class="btn btn-primary btn-block"><i data-lucide="send" aria-hidden="true"></i> Enviar mensagem</button></div>
-          </form>
+        <section class="card" aria-labelledby="t-uni">
+          <div class="card-header"><h2 id="t-uni"><i data-lucide="building-2" aria-hidden="true"></i> Sua unidade de referência</h2></div>
+          <div id="contato-unidade"></div>
         </section>
-        <section class="card" aria-labelledby="t-can">
-          <div class="card-header"><h2 id="t-can"><i data-lucide="headphones" aria-hidden="true"></i> Canais de atendimento</h2></div>
-          <button type="button" class="channel" data-canal="Chat online"><span class="li-ico"><i data-lucide="messages-square" aria-hidden="true"></i></span><span><strong>Chat online</strong><small>Seg. a sex., 8h às 18h</small></span></button>
-          <button type="button" class="channel" data-canal="Central telefônica"><span class="li-ico"><i data-lucide="phone" aria-hidden="true"></i></span><span><strong>Central telefônica (fictícia)</strong><small>0800 000 0000</small></span></button>
-          <button type="button" class="channel" data-canal="E-mail"><span class="li-ico"><i data-lucide="mail" aria-hidden="true"></i></span><span><strong>E-mail</strong><small>suporte@conecta.demo</small></span></button>
+        <section class="card" aria-labelledby="t-priv">
+          <div class="card-header"><h2 id="t-priv"><i data-lucide="shield-check" aria-hidden="true"></i> Privacidade</h2></div>
+          <p class="small">Você pode ver quem acessou seu prontuário e controlar o compartilhamento entre unidades em <a href="perfil-paciente.html">Meu perfil</a>.</p>
         </section>
       </div>
     </div>

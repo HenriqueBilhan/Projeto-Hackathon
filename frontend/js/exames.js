@@ -82,9 +82,9 @@
         ${a.observacoes ? `<h3 class="mt-2">Observações clínicas</h3><p class="detail-box">${esc(a.observacoes)}</p>` : ""}
         <h3 class="mt-3">Documentos relacionados</h3>
         ${a.documentos && a.documentos.length ? `<div class="docs">${a.documentos.map((d) => `<button type="button" class="doc-chip" data-doc="${esc(d)}">${ico("file-text")} ${esc(d)}</button>`).join("")}</div>` : '<p class="muted">Nenhum documento anexado.</p>'}
-        <p class="small muted mt-3 mb-0">${ico("shield-check")} Registro compartilhado na rede Conecta${sessao && sessao.role === "medico" ? " — este acesso foi registrado na auditoria." : "."}</p>`,
+        <p class="small muted mt-3 mb-0">${ico("shield-check")} Registro compartilhado na rede Conecta${sessao && sessao.role === "medico" ? " — o acesso ao prontuário é registrado na auditoria." : "."}</p>`,
       acoes: [{ label: "Imprimir", classe: "btn-outline", icone: "printer", onClick: () => imprimirAtendimento(a) }, { label: "Fechar", classe: "btn-primary", onClick: "fechar" }],
-      aoAbrir: (m) => qsa("[data-doc]", m).forEach((b) => b.addEventListener("click", () => C.toast(`Documento "${b.dataset.doc}" aberto em modo de visualização (demonstração).`, "info"))),
+      aoAbrir: (m) => qsa("[data-doc]", m).forEach((b) => b.addEventListener("click", () => imprimirAtendimento(a))),
     });
   }
 
@@ -92,10 +92,10 @@
     const base = location.href.replace(/[^/]*$/, "");
     return `<header class="doc-head"><img src="${base}../assets/img/logo-conecta.png" alt="Conecta" class="doc-logo"><div><strong>${esc(u.nome)}</strong><span>CNES ${esc(u.cnes || "—")} · ${esc(u.endereco || "")}</span></div></header><h1 class="doc-title">${esc(titulo)}</h1>`;
   }
-  const rodapeDoc = () => `<footer class="doc-foot">Documento gerado pela plataforma Conecta em ${esc(C.fmtDataHora(C.agoraISO()))}. Protótipo — dados fictícios, sem validade legal.</footer>`;
+  const rodapeDoc = () => `<footer class="doc-foot">Documento gerado pela plataforma Conecta em ${esc(C.fmtDataHora(C.agoraISO()))}. Via digital para consulta.</footer>`;
 
   function imprimirAtendimento(a) {
-    const u = D.unidade(a.unidadeId); const p = D.profissional(a.profissionalId); const pac = D.paciente(a.pacienteId);
+    const u = D.unidade(a.unidadeId); const p = D.profissional(a.profissionalId); const pac = D.paciente(a.pacienteId) || { nome: "—", cpf: "", cns: "" };
     C.imprimirDocumento("Registro de atendimento", `${cabecalhoDoc("Registro de atendimento", u)}
       <p><b>Paciente:</b> ${esc(pac.nome)} · <b>CPF:</b> ${esc(C.mascararCPF(pac.cpf))} · <b>CNS:</b> ${esc(C.mascararCNS(pac.cns))}</p>
       <p><b>Data:</b> ${esc(C.fmtDataHora(a.data))} · <b>Profissional:</b> ${esc(p.nome)} (${esc(p.registro || "")}) · <b>Especialidade:</b> ${esc(a.especialidade)}</p>
@@ -126,7 +126,7 @@
         </dl>
         <h3 class="mt-3">Resultado</h3>
         <div class="table-wrap">${tabelaResultado(ex)}</div>
-        <div class="alert alert-info mt-3 mb-0">${ico("info")}<span>Valores fictícios para demonstração. A interpretação de resultados deve ser feita por um profissional de saúde.</span></div>`,
+        <div class="alert alert-info mt-3 mb-0">${ico("info")}<span>Laudo liberado pela unidade responsável. A interpretação de resultados deve ser feita por um profissional de saúde.</span></div>`,
       acoes: [{ label: "Baixar PDF", classe: "btn-outline", icone: "download", onClick: () => baixarPDF(ex) }, { label: "Fechar", classe: "btn-primary", onClick: "fechar" }]
     });
   }
@@ -134,7 +134,7 @@
   /** Gera o laudo em uma janela de impressão — o usuário escolhe "Salvar como PDF". */
   function baixarPDF(ex) {
     if (ex.status !== "Resultado disponível" || !ex.resultado) { C.toast("O PDF estará disponível quando o resultado for liberado.", "alerta"); return; }
-    const u = D.unidade(ex.unidadeId); const sol = D.profissional(ex.solicitanteId); const pac = D.paciente(ex.pacienteId);
+    const u = D.unidade(ex.unidadeId); const sol = D.profissional(ex.solicitanteId); const pac = D.paciente(ex.pacienteId) || { nome: "—", nascimento: "", cns: "" };
     C.imprimirDocumento(`Laudo - ${ex.nome}`, `${cabecalhoDoc("Laudo de exame — " + ex.nome, u)}
       <p><b>Paciente:</b> ${esc(pac.nome)} · <b>Nascimento:</b> ${esc(C.fmtData(pac.nascimento))} · <b>CNS:</b> ${esc(C.mascararCNS(pac.cns))}</p>
       <p><b>Data de realização:</b> ${esc(C.fmtData(ex.data))} · <b>Solicitante:</b> ${esc(sol.nome)}</p>
@@ -144,7 +144,7 @@
 
   /** Visualização de receita médica (com opção de impressão). */
   function abrirReceita(r) {
-    const u = D.unidade(r.unidadeId); const p = D.profissional(r.profissionalId); const pac = D.paciente(r.pacienteId);
+    const u = D.unidade(r.unidadeId); const p = D.profissional(r.profissionalId); const pac = D.paciente(r.pacienteId) || { nome: "—" };
     const corpoDoc = `<div class="rx">
         <div class="rx-head"><span class="rx-symbol">℞</span><div><strong>${esc(r.medicamento)}</strong><span>${esc(r.dosagem)}</span></div>${badge(r.status)}</div>
         <dl class="dl">
@@ -156,7 +156,7 @@
           <div><dt>Paciente</dt><dd>${esc(pac.nome)}</dd></div>
           <div class="full"><dt>Orientações</dt><dd>${esc(r.orientacoes || "—")}</dd></div>
         </dl>
-        <div class="rx-sign"><span></span>${esc(p.nome)} — ${esc(p.registro || "")}<br><small>Assinatura eletrônica simulada</small></div>
+        <div class="rx-sign"><span></span>${esc(p.nome)} — ${esc(p.registro || "")}<br><small>Registrada eletronicamente no Conecta em ${esc(C.fmtData(r.data))}</small></div>
       </div>`;
     C.abrirModal({
       titulo: "Receita médica", tamanho: "lg", corpo: corpoDoc,
@@ -173,7 +173,9 @@
   /* ------------------------------------------------------------------------
      Página "Meus exames" (paciente)
      ------------------------------------------------------------------------ */
-  C.pagina("exames", function (s) {
+  C.pagina("exames", async function (s) {
+    await D.fetch("exames", "/exams", { limit: 500 });
+    D.set("pacientes", [await C.Api.get("/patients/me")]);
     const todos = () => D.where("exames", (e) => e.pacienteId === s.refId).sort((a, b) => b.data.localeCompare(a.data));
     const form = qs("#filtros-exames");
     const selUni = qs("#f-unidade");

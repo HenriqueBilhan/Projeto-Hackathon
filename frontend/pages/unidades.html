@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Conecta — plataforma integrada de saúde pública (protótipo com dados fictícios).">
+  <meta name="description" content="Conecta — plataforma integrada de saúde pública.">
   <title>Unidades de saúde | Conecta</title>
   <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="../css/administrador.css">
   <link rel="stylesheet" href="../css/responsividade.css">
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+  <script src="../js/config.js" defer></script>
+  <script src="../js/api.js" defer></script>
   <script src="../js/main.js" defer></script>
   <script src="../js/administrador.js" defer></script>
 </head>
@@ -28,7 +30,7 @@
   <!-- O menu lateral e o cabeçalho são montados por js/main.js (montarShell) -->
   <main>
 
-    <div class="page-head"><div><h1>Unidades de saúde</h1><p>Cadastre e gerencie UBSs, UPAs, hospitais, laboratórios e clínicas integradas à rede.</p></div><div class="btn-row"><button type="button" class="btn btn-primary" data-nova="UBS"><i data-lucide="plus" aria-hidden="true"></i> UBS</button><button type="button" class="btn btn-outline" data-nova="UPA"><i data-lucide="plus" aria-hidden="true"></i> UPA</button><button type="button" class="btn btn-outline" data-nova="Hospital"><i data-lucide="plus" aria-hidden="true"></i> Hospital</button><button type="button" class="btn btn-outline" data-nova="Laboratório"><i data-lucide="plus" aria-hidden="true"></i> Laboratório</button><button type="button" class="btn btn-outline" data-nova="Clínica"><i data-lucide="plus" aria-hidden="true"></i> Clínica</button></div></div>
+    <div class="page-head"><div><h1>Unidades de saúde</h1><p>Cadastre e gerencie UBSs, UPAs, hospitais, laboratórios e clínicas integradas à rede.</p></div><div class="btn-row"><button type="button" class="btn btn-primary" id="btn-importar-cnes"><i data-lucide="download-cloud" aria-hidden="true"></i> Importar do CNES</button><button type="button" class="btn btn-outline" data-nova="UBS"><i data-lucide="plus" aria-hidden="true"></i> UBS</button><button type="button" class="btn btn-outline" data-nova="UPA"><i data-lucide="plus" aria-hidden="true"></i> UPA</button><button type="button" class="btn btn-outline" data-nova="Hospital"><i data-lucide="plus" aria-hidden="true"></i> Hospital</button><button type="button" class="btn btn-outline" data-nova="Laboratório"><i data-lucide="plus" aria-hidden="true"></i> Laboratório</button><button type="button" class="btn btn-outline" data-nova="Clínica"><i data-lucide="plus" aria-hidden="true"></i> Clínica</button></div></div>
     <section class="card" aria-labelledby="t-un"><div class="card-header"><h2 id="t-un"><i data-lucide="building-2" aria-hidden="true"></i> Unidades integradas</h2></div>
       <div class="field mb-0"><label for="un-busca" class="sr-only">Buscar unidade</label><div class="input-icon"><i data-lucide="search" aria-hidden="true"></i><input class="input" id="un-busca" type="search" placeholder="Buscar por nome, endereço ou CNES"></div></div>
       <div class="chips mt-2" id="un-chips" role="group" aria-label="Filtrar por tipo"></div>

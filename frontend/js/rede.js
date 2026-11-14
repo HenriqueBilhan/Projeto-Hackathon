@@ -1,8 +1,9 @@
 /* ==========================================================================
    CONECTA — Rede de Atendimento (rede.js)
-   Diagrama interativo mostrando como o histórico clínico acompanha o
-   paciente entre UBS, UPA, hospitais, laboratórios e clínicas.
-   IMPORTANTE: a integração com o SUS é SIMULADA, com dados fictícios.
+   Diagrama interativo (exemplo ilustrativo) mostrando como o histórico clínico
+   acompanha o paciente entre UBS, UPA, hospitais, laboratórios e clínicas.
+   Diretório de unidades e painel de integração usam dados reais da API:
+   GET /health-units e GET /integrations/ministerio-saude/status | sync-logs.
    ========================================================================== */
 (function () {
   "use strict";
@@ -33,7 +34,7 @@
     { id: "Clínica", rotulo: "Clínica especializada", sub: "Especialidades", icone: "stethoscope" }
   ];
 
-  C.pagina("rede", function (s) {
+  C.pagina("rede", async function (s) {
     const diagrama = qs("#diagrama");
     const svg = qs("#diagrama-linhas");
     const unidades = D.getAll("unidades");
@@ -71,7 +72,7 @@
 
     /** Cartão de "registro" que evolui durante a demonstração. */
     function cartaoRegistro(tipo) {
-      const a = D.getById("atendimentos", "a1") || {};
+      const a = { diagnostico: "Infecção do trato urinário (CID N39.0)" };
       const mapa = {
         envio: `<span class="rec-tag">${ico("upload-cloud")} Enviando registro…</span><strong>UPA Central · 10/11/2026 14:35</strong><span>Febre e dor abdominal → ${esc(a.diagnostico || "ITU")}</span>`,
         historico: `<span class="rec-tag ok">${ico("check-circle-2")} Registrado no histórico</span><strong>Linha do tempo de Maria A. Souza</strong><span>6 registros de 5 unidades diferentes</span>`,
@@ -150,27 +151,71 @@
         <div class="full"><dt>Especialidades disponíveis</dt><dd>${[...new Set(profs.map((p) => p.especialidade))].map((e) => `<span class="chip">${esc(e)}</span>`).join("") || "—"}</dd></div></dl>` });
     });
 
-    /* ---- Painel de status das integrações (profissional e administrador) ---- */
-    function renderIntegracao() {
-      const agora = Date.now();
-      C.tabela(qs("#tabela-integracao"), {
-        rotulo: "Status das integrações", linhas: D.getAll("unidades"),
+    /* ---- Painel de integração com a API de Dados Abertos do Ministério da Saúde ---- */
+    const Api = C.Api;
+    const ehAdmin = s.role === "admin";
+    const ROTULO = { idle: "Aguardando", running: "Em execução", success: "Concluída", partial: "Parcial", failed: "Falhou" };
+    const badgeSync = (st) => `<span class="badge badge-${{ success: "sucesso", partial: "alerta", failed: "perigo", running: "info" }[st] || "neutro"}">${esc(ROTULO[st] || st || "Nunca executada")}</span>`;
+    async function renderIntegracao() {
+      if (s.role === "paciente") return;
+      let st;
+      try { st = await Api.get("/integrations/ministerio-saude/status"); }
+      catch (e) { qs("#tabela-integracao").innerHTML = `<div class="alert alert-perigo">${esc(e.message)}</div>`; return; }
+      const api = st.api;
+      const base = st.baseLocal;
+      qs("#tabela-integracao").innerHTML = `
+        <div class="alert ${api.disponivel ? "alert-sucesso" : "alert-perigo"}">${ico(api.disponivel ? "check-circle-2" : "wifi-off")}<span>
+          API oficial (${esc(api.baseUrl)}): <strong>${api.disponivel ? `disponível — ${api.latenciaMs} ms` : "indisponível"}</strong>${api.erro ? ` · ${esc(api.erro)}` : ""}.
+          Base local: ${Number(base.estabelecimentos).toLocaleString("pt-BR")} estabelecimentos, ${Number(base.municipios).toLocaleString("pt-BR")} municípios, ${base.tiposUnidade} tipos de unidade, ${Number(base.profissionaisCnes).toLocaleString("pt-BR")} vínculos de profissionais, ${Number(base.hospitaisLeitos).toLocaleString("pt-BR")} versões de hospitais/leitos e ${base.endpointsCatalogados} endpoints catalogados.</span></div>
+        <div id="tabela-conjuntos"></div>
+        ${ehAdmin ? `<h3 class="mt-3">Últimas execuções</h3><div id="tabela-logs"></div>` : ""}`;
+      C.tabela(qs("#tabela-conjuntos"), {
+        rotulo: "Conjuntos de dados sincronizados", linhas: st.conjuntos,
         colunas: [
-          { titulo: "Unidade", render: (u) => `<span class="cell-strong">${esc(u.nome)}</span>` },
-          { titulo: "Tipo", render: (u) => tipoTag(u.tipo) },
-          { titulo: "Status", render: (u) => badge(u.status) },
-          { titulo: "Última sincronização", render: (u, i) => (u.integrada ? esc(C.tempoRelativo(new Date(agora - ((u.cnes % 9) + 1) * 60000).toISOString())) : "—") },
-          { titulo: "Registros hoje", render: (u) => (u.integrada ? String(Math.round(u.volume / 30)) : "0") }
+          { titulo: "Conjunto", render: (c) => `<span class="cell-strong">${esc(c.nome)}</span><span class="cell-sub mono">${esc(c.endpoint)}</span>` },
+          { titulo: "Situação", render: (c) => badgeSync(c.sincronizacao && c.sincronizacao.status) },
+          { titulo: "Última sincronização bem-sucedida", render: (c) => (c.sincronizacao && c.sincronizacao.lastSuccessAt ? esc(C.fmtDataHora(c.sincronizacao.lastSuccessAt)) : "—") },
+          { titulo: "Último erro", render: (c) => `<span class="small">${esc((c.sincronizacao && c.sincronizacao.lastError) || "—")}</span>` },
+          ...(ehAdmin ? [{ titulo: "Ação", render: (c) => `<button type="button" class="btn btn-outline btn-sm" data-sync="${esc(c.codigo)}" ${c.sincronizacao && c.sincronizacao.status === "running" ? "disabled" : ""}>${ico("refresh-cw")} Sincronizar</button>` }] : [])
         ]
       });
+      if (ehAdmin) {
+        const logs = await Api.list("/integrations/ministerio-saude/sync-logs", { limit: 10 });
+        C.tabela(qs("#tabela-logs"), {
+          rotulo: "Execuções de sincronização", linhas: logs.items, vazio: "Nenhuma sincronização executada ainda.",
+          colunas: [
+            { titulo: "Início", render: (l) => `${esc(C.fmtDataHora(l.startedAt))}<span class="cell-sub">${esc(l.trigger)} · ${esc(l.mode)}</span>` },
+            { titulo: "Conjunto", render: (l) => esc(l.dataset) },
+            { titulo: "Situação", render: (l) => badgeSync(l.status) },
+            { titulo: "Registros", render: (l) => `<span class="small">${l.recordsFetched} lidos · ${l.recordsInserted} novos · ${l.recordsUpdated} alterados · ${l.recordsUnchanged} inalterados${l.recordsInvalid ? ` · ${l.recordsInvalid} inválidos` : ""}</span><span class="cell-sub">${l.requestsMade} requisição(ões)</span>` },
+            { titulo: "Erros", render: (l) => (l.errorCount ? `<span class="small">${esc((l.errors || [])[0] || "")}</span>` : "—") },
+            { titulo: "Ação", render: (l) => (["failed", "partial"].includes(l.status) ? `<button type="button" class="btn btn-secondary btn-sm" data-reprocessar="${esc(l.id)}">${ico("rotate-ccw")} Reprocessar</button>` : "") }
+          ]
+        });
+      }
+      C.icones();
     }
-    qs("#btn-sincronizar").addEventListener("click", (e) => {
-      const b = e.currentTarget; b.disabled = true; b.innerHTML = `${ico("loader-2")} Sincronizando…`; C.icones();
-      setTimeout(() => { b.disabled = false; b.innerHTML = `${ico("refresh-cw")} Sincronizar agora`; renderIntegracao(); C.icones(); C.toast("Sincronização simulada concluída com todas as unidades integradas.", "sucesso"); }, 1200);
+    const painel = qs("#painel-integracao");
+    painel.addEventListener("click", async (e) => {
+      const b = e.target.closest("[data-sync]"); const r = e.target.closest("[data-reprocessar]");
+      try {
+        if (b) { b.disabled = true; await Api.post("/integrations/ministerio-saude/sync", { dataset: b.dataset.sync }); C.toast("Sincronização iniciada. Acompanhe o andamento nesta tela.", "info"); setTimeout(renderIntegracao, 1500); }
+        if (r) { r.disabled = true; await Api.post("/integrations/ministerio-saude/reprocess", { logId: r.dataset.reprocessar }); C.toast("Reprocessamento iniciado.", "info"); setTimeout(renderIntegracao, 1500); }
+      } catch (err) { C.erroApi(err); renderIntegracao(); }
     });
+    const btnSync = qs("#btn-sincronizar");
+    if (!ehAdmin) btnSync.classList.add("hidden");
+    btnSync.innerHTML = `${ico("refresh-cw")} Sincronizar tudo`;
+    btnSync.addEventListener("click", async () => {
+      btnSync.disabled = true;
+      try { await Api.post("/integrations/ministerio-saude/sync", { dataset: "todos" }); C.toast("Sincronização completa iniciada em segundo plano.", "info"); }
+      catch (err) { C.erroApi(err); }
+      setTimeout(() => { btnSync.disabled = false; renderIntegracao(); }, 2000);
+    });
+    qs("#painel-integracao .card-header h2").lastChild.textContent = " Integração com a API de Dados Abertos do Ministério da Saúde";
 
     renderUnidades();
-    renderIntegracao();
+    await renderIntegracao();
     aplicarPasso(-1, false);
     requestAnimationFrame(desenharLinhas);
     let espera; window.addEventListener("resize", () => { clearTimeout(espera); espera = setTimeout(desenharLinhas, 120); });

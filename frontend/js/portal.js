@@ -1,7 +1,7 @@
 /* ==========================================================================
    CONECTA — Portal institucional (portal.js)
    Banner rotativo, menu mobile, busca, acessibilidade (tamanho do texto e
-   alto contraste), diretório de unidades, orientações e formulário de contato.
+   alto contraste), diretório público de unidades (GET /public/health-units) e orientações.
    ========================================================================== */
 (function () {
   "use strict";
@@ -11,14 +11,14 @@
   const TIPOS = ["UBS", "UPA", "Hospital", "Laboratório", "Clínica"];
   const normalizar = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
-  /** Conteúdos de orientação (fictícios). */
+  /** Orientações sobre o uso da plataforma. */
   const NOTICIAS = [
-    { cor: "c1", icone: "syringe", cat: "Campanha", data: "2026-11-10", titulo: "Vacinação contra a gripe segue nas UBSs da rede", resumo: "Idosos, gestantes, crianças e pessoas com doenças crônicas têm prioridade.", texto: "A vacinação contra a gripe continua em todas as UBSs integradas, de segunda a sexta. Leve um documento com foto e o Cartão SUS. A dose aplicada aparece no seu histórico do Conecta logo após o registro." },
-    { cor: "c2", icone: "flask-conical", cat: "Como usar", data: "2026-11-04", titulo: "Como acompanhar seus exames pelo Conecta", resumo: "Saiba quando o resultado fica pronto e como salvar o laudo em PDF.", texto: "Em “Meus exames” você vê o status de cada exame: solicitado, agendado, em análise ou resultado disponível. Quando o resultado é liberado, você recebe uma notificação e pode salvar o laudo em PDF." },
-    { cor: "c3", icone: "shield-check", cat: "Privacidade", data: "2026-10-28", titulo: "Você sabe quem consultou seu prontuário?", resumo: "No Conecta, cada acesso é registrado e aparece para o paciente.", texto: "Seus dados de saúde são sensíveis. Por isso, apenas profissionais autorizados podem abrir seu prontuário, e cada acesso fica registrado com nome, unidade, data e horário. Você consulta esses registros em “Meu perfil”." }
+    { cor: "c1", icone: "building-2", cat: "Rede", data: "2026-11-14", titulo: "Unidades com dados oficiais do CNES", resumo: "As unidades da rede são cadastradas a partir do Cadastro Nacional de Estabelecimentos de Saúde.", texto: "Os dados de identificação das unidades (nome, endereço, tipo de estabelecimento) vêm da API de Dados Abertos do Ministério da Saúde e são atualizados periodicamente pela sincronização do Conecta." },
+    { cor: "c2", icone: "flask-conical", cat: "Como usar", data: "2026-11-14", titulo: "Como acompanhar seus exames pelo Conecta", resumo: "Saiba quando o resultado fica pronto e como salvar o laudo em PDF.", texto: "Em “Meus exames” você vê o status de cada exame: solicitado, agendado, em análise ou resultado disponível. Quando o laudo é liberado pela unidade, você recebe uma notificação e pode salvá-lo em PDF." },
+    { cor: "c3", icone: "shield-check", cat: "Privacidade", data: "2026-11-14", titulo: "Você sabe quem consultou seu prontuário?", resumo: "No Conecta, cada acesso é registrado e aparece para o paciente.", texto: "Seus dados de saúde são sensíveis. Apenas profissionais autorizados podem abrir seu prontuário, e cada acesso fica registrado com nome, unidade, data e horário. Você consulta esses registros em “Meu perfil”." }
   ];
 
-  C.pagina("home", function () {
+  C.pagina("home", async function () {
     /* ---- Sessão ativa: atalho para a área do usuário ---- */
     const s = C.Auth.sessao();
     if (s) {
@@ -108,14 +108,19 @@
     hero.addEventListener("focusout", iniciar);
     mostrar(0); iniciar();
 
-    /* ---- Números da rede ---- */
-    const ind = D.getObj("indicadores"); const unidades = D.getAll("unidades");
-    qs("#numeros").innerHTML = [
+    /* ---- Diretório público (dados institucionais, sem dados de pacientes) ---- */
+    try { D.set("unidades", (await C.Api.list("/public/health-units", { limit: 500 }, { auth: false })).items); } catch (e) { D.set("unidades", []); }
+    /* ---- Números da rede (seção opcional na página) ---- */
+    if (qs("#numeros")) {
+      const st = await C.Api.get("/public/stats", null, { auth: false }).catch(() => null);
+      const unidades = D.getAll("unidades");
+      qs("#numeros").innerHTML = [
       [unidades.filter((u) => u.integrada).length, "unidades integradas", "building-2"],
-      [(ind.pacientesBase + D.getAll("pacientes").length).toLocaleString("pt-BR"), "pacientes cadastrados", "users"],
-      [(ind.atendimentosBase + D.getAll("atendimentos").length).toLocaleString("pt-BR"), "atendimentos registrados", "stethoscope"],
+      [st ? Number(st.estabelecimentosCnes).toLocaleString("pt-BR") : "—", "estabelecimentos CNES na base", "database"],
+      [st ? Number(st.municipios).toLocaleString("pt-BR") : "—", "municípios com regiões de saúde", "map"],
       ["100%", "dos acessos auditados", "scroll-text"]
     ].map(([v, l, i]) => `<div class="number">${ico(i)}<strong>${esc(v)}</strong><span>${esc(l)}</span></div>`).join("");
+    }
 
     /* ---- Diretório de unidades ---- */
     let filtroTipo = "";
@@ -142,14 +147,14 @@
     qs("#un-tipos").addEventListener("click", (e) => { const b = e.target.closest("[data-tipo]"); if (b) { filtroTipo = b.dataset.tipo; renderUnidades(); } });
     qs("#un-lista").addEventListener("click", (e) => {
       const b = e.target.closest("[data-unidade]"); if (!b) return;
-      const u = D.unidade(b.dataset.unidade);
-      const esp = [...new Set(D.getAll("profissionais").filter((p) => p.unidadeId === u.id && p.ativo).map((p) => p.especialidade))];
+      const u = D.getById("unidades", b.dataset.unidade);
+      const esp = u.especialidades || [];
       C.abrirModal({ titulo: u.nome, corpo: `<dl class="dl">
         <div><dt>Tipo</dt><dd>${tipoTag(u.tipo)}</dd></div><div><dt>Integração ao Conecta</dt><dd>${badge(u.status)}</dd></div>
         <div class="full"><dt>Endereço</dt><dd>${esc(u.endereco)}</dd></div>
         <div><dt>Telefone</dt><dd>${esc(u.telefone)}</dd></div><div><dt>Funcionamento</dt><dd>${esc(u.horario)}</dd></div>
-        <div class="full"><dt>Atendimentos disponíveis</dt><dd>${esp.map((x) => `<span class="chip">${esc(x)}</span>`).join("") || "Informação não disponível"}</dd></div></dl>
-        <p class="small muted mt-3 mb-0">Unidade e endereço fictícios, para demonstração.</p>` });
+        ${u.cnes ? `<div><dt>CNES</dt><dd>${esc(u.cnes)}</dd></div>` : ""}
+        <div class="full"><dt>Especialidades com profissionais na rede</dt><dd>${esp.map((x) => `<span class="chip">${esc(x)}</span>`).join("") || "Informação não disponível"}</dd></div></dl>` });
     });
     renderUnidades();
 
@@ -158,7 +163,7 @@
       <article class="news-card">
         <div class="news-thumb ${n.cor}" aria-hidden="true">${ico(n.icone)}</div>
         <div class="news-body">
-          <span class="news-meta"><span class="news-cat">${esc(n.cat)}</span> · ${esc(C.fmtData(n.data))}</span>
+          <span class="news-meta"><span class="news-cat">${esc(n.cat)}</span></span>
           <h3>${esc(n.titulo)}</h3>
           <p>${esc(n.resumo)}</p>
           <button type="button" class="link-arrow" data-noticia="${i}">Ler mais ${ico("arrow-right")}</button>
@@ -167,7 +172,7 @@
     qs("#noticias").addEventListener("click", (e) => {
       const b = e.target.closest("[data-noticia]"); if (!b) return;
       const n = NOTICIAS[Number(b.dataset.noticia)];
-      C.abrirModal({ titulo: n.titulo, corpo: `<p class="small muted">${esc(n.cat)} · ${esc(C.fmtData(n.data))}</p><p>${esc(n.texto)}</p><p class="small muted mb-0">Conteúdo de exemplo do protótipo.</p>` });
+      C.abrirModal({ titulo: n.titulo, corpo: `<p class="small muted">${esc(n.cat)}</p><p class="mb-0">${esc(n.texto)}</p>` });
     });
 
     /* ---- Política de privacidade ---- */
@@ -180,20 +185,8 @@
         <li>${ico("eye-off")} CPF e CNS aparecem <strong>mascarados</strong> sempre que possível.</li>
         <li>${ico("bell")} Você é <strong>avisado</strong> quando seu prontuário é acessado.</li>
       </ul>
-      <div class="alert alert-info mb-0">${ico("info")}<span>Protótipo: nenhum dado real é coletado e a integração com sistemas oficiais é simulada.</span></div>`
+      <div class="alert alert-info mb-0">${ico("info")}<span>Os cadastros de estabelecimentos vêm da API de Dados Abertos do Ministério da Saúde; os registros clínicos são feitos pelas unidades integradas ao Conecta.</span></div>`
     })));
 
-    /* ---- Contato ---- */
-    const form = qs("#form-contato");
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      if (!C.validarFormulario(form, { email: (v) => (/^\S+@\S+\.\S+$/.test(v) ? "" : "E-mail inválido."), mensagem: (v) => (v.trim().length >= 10 ? "" : "Escreva pelo menos 10 caracteres.") })) return;
-      form.reset();
-      C.toast(`Mensagem recebida. Protocolo CN-${Math.floor(100000 + Math.random() * 899999)} (simulação).`, "sucesso", "Obrigado pelo contato");
-    });
-
-    qs("#btn-reset").addEventListener("click", async () => {
-      if (await C.confirmar({ titulo: "Restaurar dados", mensagem: "Os registros criados durante a demonstração serão apagados e os dados fictícios originais serão restaurados.", rotulo: "Restaurar", perigo: true })) { C.Data.reset(); C.toast("Dados de demonstração restaurados."); }
-    });
   });
 })();

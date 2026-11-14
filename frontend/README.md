@@ -7,6 +7,8 @@ o histórico clínico de pacientes atendidos em UBSs, UPAs, hospitais, laborató
 clínicas da rede pública. O histórico acompanha o paciente, independentemente da unidade
 em que ele seja atendido.
 
+> **Integração com o backend:** os dados agora vêm da API REST do Conecta (`../backend`), via `js/api.js` e `Conecta.Data` (cache em memória). Veja o [README da raiz](../README.md). As seções abaixo descrevem o protótipo original.
+
 ⚠️ **Todos os dados são fictícios.** A integração com o SUS é **simulada** no navegador;
 não existe conexão com sistemas oficiais. Não insira dados reais de saúde.
 
