@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="ConectaSaúde: plataforma de integração entre hospitais, clínicas, laboratórios, profissionais, pacientes e familiares." />
+    <title>ConectaSaúde | Plataforma de Integração em Saúde</title> 
+    <link href="style.css" rel="stylesheet" />
+    <script defer src="script.js"></script>
+</head>
+
+<body>
+    <a href="#conteudo-principal" id="link-pular-para-conteudo">Pular para o conteúdo principal</a>
+
+    <header id="cabecalho-principal">
+        <div class="cabecalho-identidade">
+            <h1 id="nome-plataforma">ConectaSaúde</h1>
+            <p id="slogan-plataforma">Integração entre hospitais, clínicas, laboratórios, profissionais, pacientes e
+                familiares</p>
+        </div>
+
+        <section id="identificacao-usuario" aria-label="Identificação do usuário">
+            <p>Usuário: <strong id="nome-usuario-logado">Não identificado</strong></p>
+            <p>Perfil de acesso: <span id="perfil-usuario-logado">Não definido</span></p>
+            <p>Instituição: <span id="instituicao-usuario-logado">Não vinculada</span></p>
+            <button id="botao-notificacoes-cabecalho" type="button">Notificações (0)</button>
+            <button id="botao-sair" type="button">Sair</button>
+        </section>
+    </header>
+
+    <aside id="barra-lateral">
+        <nav aria-label="Menu principal" id="menu-lateral">
+            <ul id="lista-menu-lateral">
+                <li><a href="#secao-dashboard">Dashboard</a></li>
+                <li><a href="#secao-pacientes">Pacientes</a></li>
+                <li><a href="#secao-historico-medico">Histórico médico</a></li>
+                <li><a href="#secao-exames">Exames, imagens, laudos e prescrições</a></li>
+                <li><a href="#secao-rede-cuidado-familiar">Rede de Cuidado Familiar</a></li>
+                <li><a href="#secao-classificacao-risco">Classificação de risco</a></li>
+                <li><a href="#secao-profissionais">Profissionais de saúde</a></li>
+                <li><a href="#secao-instituicoes">Hospitais, clínicas e laboratórios</a></li>
+                <li><a href="#secao-notificacoes">Notificações</a></li>
+                <li><a href="#secao-configuracoes-perfil">Configurações e perfil</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main id="conteudo-principal">
+
+        <!-- 1. DASHBOARD -->
+        <section id="secao-dashboard">
+            <h2>Dashboard</h2>
+            <p>Os indicadores são atualizados conforme os registros realizados nesta plataforma.</p>
+
+            <section id="dashboard-indicadores">
+                <h3>Indicadores</h3>
+
+                <article class="indicador-dashboard" id="indicador-pacientes">
+                    <h4>Pacientes cadastrados</h4>
+                    <p class="valor-indicador">0</p>
+                    <p class="descricao-indicador">Total de pacientes ativos na rede.</p>
+                </article>
+
+                <article class="indicador-dashboard" id="indicador-atendimentos">
+                    <h4>Atendimentos hoje</h4>
+                    <p class="valor-indicador">0</p>
+                    <p class="descricao-indicador">Atendimentos registrados no dia.</p>
+                </article>
+
+                <article class="indicador-dashboard" id="indicador-exames-pendentes">
+                    <h4>Exames pendentes</h4>
+                    <p class="valor-indicador">0</p>
+                    <p class="descricao-indicador">Exames aguardando realização ou resultado.</p>
+                </article>
+
+                <article class="indicador-dashboard" id="indicador-laudos">
+                    <h4>Laudos disponíveis</h4>
+                    <p class="valor-indicador">0</p>
+                    <p class="descricao-indicador">Laudos registrados.</p>
+                </article>
+
+                <article class="indicador-dashboard" id="indicador-instituicoes">
+                    <h4>Instituições conectadas</h4>
+                    <p class="valor-indicador">0</p>
+                    <p class="descricao-indicador">Hospitais, clínicas e laboratórios cadastrados.</p>
+                </article>
+            </section>
+
+            <section id="dashboard-classificacao-risco">
+                <h3>Classificações de risco registradas hoje</h3>
+                <table id="tabela-resumo-classificacao">
+                    <caption>Resumo por categoria do Protocolo de Manchester</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Categoria</th>
+                            <th scope="col">Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+
+            <section id="dashboard-atividades-recentes">
+                <h3>Resumo de atividades recentes</h3>
+                <table id="tabela-atividades-recentes">
+                    <caption>Últimas atividades da plataforma</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Horário</th>
+                            <th scope="col">Atividade</th>
+                            <th scope="col">Módulo</th>
+                            <th scope="col">Responsável</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </section>
+
+        <!-- 2. PACIENTES -->
+        <section id="secao-pacientes">
+            <h2>Pacientes</h2>
+
+            <section id="pacientes-cadastro">
+                <h3>Cadastro de paciente</h3>
+                <form id="formulario-cadastro-paciente">
+                    <fieldset>
+                        <legend>Dados pessoais</legend>
+                        <p>
+                            <label for="paciente-nome">Nome completo</label>
+                            <input id="paciente-nome" name="nome" required type="text" />
+                        </p>
+                        <p>
+                            <label for="paciente-nascimento">Data de nascimento</label>
+                            <input id="paciente-nascimento" name="nascimento" required type="date" />
+                        </p>
+                        <p>
+                            <label for="paciente-sexo">Sexo</label>
+                            <select id="paciente-sexo" name="sexo">
+                                <option value="">Selecione</option>
+                                <option value="feminino">Feminino</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="outro">Outro</option>
+                                <option value="nao-informado">Prefiro não informar</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label for="paciente-cpf">CPF</label>
+                            <input id="paciente-cpf" name="cpf" placeholder="000.000.000-00" type="text" />
+                        </p>
+                        <p>
+                            <label for="paciente-cartao-sus">Cartão Nacional de Saúde (CNS)</label>
+                            <input id="paciente-cartao-sus" name="cns" type="text" />
+                        </p>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Contato e endereço</legend>
+                        <p>
+                            <label for="paciente-telefone">Telefone</label>
+                            <input id="paciente-telefone" name="telefone" type="tel" />
+                        </p>
+                        <p>
+                            <label for="paciente-email">E-mail</label>
+                            <input id="paciente-email" name="email" type="email" />
+                        </p>
+                        <p>
+                            <label for="paciente-endereco">Endereço</label>
+                            <input id="paciente-endereco" name="endereco" type="text" />
+                        </p>
+                        <p>
+                            <label for="paciente-cidade">Cidade</label>
+                            <input id="paciente-cidade" name="cidade" type="text" />
+                        </p>
+                        <p>
+                            <label for="paciente-uf">UF</label>
+                            <input id="paciente-uf" maxlength="2" name="uf" type="text" />
+                        </p>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Informações clínicas básicas</legend>
+                        <p>
+                            <label for="paciente-tipo-sanguineo">Tipo sanguíneo</label>
+                            <select id="paciente-tipo-sanguineo" name="tipo-sanguineo">
+                                <option value="">Não informado</option>
+                                <option>A+</option>
+                                <option>A-</option>
+                                <option>B+</option>
+                                <option>B-</option>
+                                <option>AB+</option>
+                                <option>AB-</option>
+                                <option>O+</option>
+                                <option>O-</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label for="paciente-alergias">Alergias conhecidas</label>
+                            <textarea id="paciente-alergias" name="alergias"></textarea>
+                        </p>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Consentimento</legend>
+                        <p>
+                            <input id="paciente-consentimento-lgpd" name="consentimento" required type="checkbox" />
+                            <label for="paciente-consentimento-lgpd">O paciente (ou responsável legal) autorizou o
+                                tratamento dos dados conforme a LGPD.</label>
+                        </p>
+                    </fieldset>
+
+                    <button id="botao-salvar-paciente" type="submit">Salvar paciente</button>
+                    <button id="botao-limpar-paciente" type="reset">Limpar formulário</button>
+                </form>
+            </section>
+
+            <section id="pacientes-consulta">
+                <h3>Consulta de pacientes</h3>
+                <form id="formulario-consulta-paciente">
+                    <p>
+                        <label for="consulta-paciente-termo">Nome, CPF ou CNS</label>
+                        <input id="consulta-paciente-termo" name="termo" type="search" />
+                    </p>
+                    <button id="botao-buscar-paciente" type="submit">Buscar</button>
+                </form>
+
+                <table id="tabela-pacientes">
+                    <caption>Pacientes cadastrados</caption>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Telefone</th>
+                            <th>Situação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </section>
+
+        <!-- 3. HISTÓRICO MÉDICO -->
+        <section id="secao-historico-medico">
+            <h2>Histórico médico</h2>
+            <p>O acesso ao histórico respeita as permissões concedidas pelo paciente.</p>
+
+            <form id="formulario-selecao-historico">
+                <p>
+                    <label for="historico-paciente">Paciente</label>
+                    <select id="historico-paciente" name="paciente">
+                        <option value="">Selecione</option>
+                    </select>
+                </p>
+                <button id="botao-carregar-historico" type="submit">Carregar histórico</button>
+            </form>
+
+            <section id="historico-resumo-clinico">
+                <h3>Resumo clínico</h3>
+                <dl>
+                    <dt>Condições crônicas</dt>
+                    <dd id="resumo-condicoes">Selecione um paciente.</dd>
+                    <dt>Alergias</dt>
+                    <dd id="resumo-alergias">Selecione um paciente.</dd>
+                    <dt>Medicamentos em uso</dt>
+                    <dd id="resumo-medicamentos">Selecione um paciente.</dd>
+                    <dt>Cirurgias anteriores</dt>
+                    <dd id="resumo-cirurgias">Selecione um paciente.</dd>
+                </dl>
+            </section>
+
+            <section id="historico-linha-do-tempo">
+                <p class="mensagem-vazia">Selecione um paciente para consultar o histórico.</p>
+            </section>
+
+            <section id="historico-novo-registro">
+                <h3>Novo registro no histórico</h3>
+                <form id="formulario-registro-historico">
+                    <p>
+                        <label for="registro-data">Data do atendimento</label>
+                        <input id="registro-data" name="data" required type="date" />
+                    </p>
+                    <p>
+                        <label for="registro-tipo">Tipo de registro</label>
+                        <select id="registro-tipo" name="tipo">
+                            <option>Consulta</option>
+                            <option>Internação</option>
+                            <option>Procedimento</option>
+                            <option>Vacinação</option>
+                            <option>Observação clínica</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="registro-profissional">Profissional responsável</label>
+                        <input id="registro-profissional" name="profissional" required type="text" />
+                    </p>
+                    <p>
+                        <label for="registro-descricao">Descrição</label>
+                        <textarea id="registro-descricao" name="descricao" required></textarea>
+                    </p>
+                    <button id="botao-salvar-registro-historico" type="submit">Salvar registro</button>
+                </form>
+            </section>
+        </section>
+
+        <!-- 4. EXAMES, IMAGENS, LAUDOS E PRESCRIÇÕES -->
+        <section id="secao-exames">
+            <h2>Exames, imagens, laudos e prescrições</h2>
+
+            <aside id="aviso-prioridade-exames">
+                <p>
+                    <strong>Atenção:</strong> a classificação de risco não determina automaticamente
+                    a prioridade dos exames. A prioridade é definida pelo profissional solicitante.
+                </p>
+            </aside>
+
+            <section id="exames-solicitacao">
+                <h3>Solicitação de exame</h3>
+                <form id="formulario-solicitacao-exame">
+                    <p>
+                        <label for="exame-paciente">Paciente</label>
+                        <select id="exame-paciente" name="paciente" required>
+                            <option value="">Selecione</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="exame-tipo">Tipo de exame</label>
+                        <input id="exame-tipo" name="tipo" required type="text" />
+                    </p>
+                    <p>
+                        <label for="exame-laboratorio">Laboratório ou unidade executora</label>
+                        <select id="exame-laboratorio" name="executor">
+                            <option value="">Selecione</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="exame-prioridade">Prioridade</label>
+                        <select id="exame-prioridade" name="prioridade" required>
+                            <option value="">Selecione</option>
+                            <option value="rotina">Rotina</option>
+                            <option value="urgente">Urgente</option>
+                            <option value="emergencia">Emergência</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="exame-justificativa">Justificativa clínica</label>
+                        <textarea id="exame-justificativa" name="justificativa"></textarea>
+                    </p>
+                    <button id="botao-solicitar-exame" type="submit">Solicitar exame</button>
+                </form>
+            </section>
+
+            <section id="exames-lista">
+                <h3>Exames registrados</h3>
+                <table id="tabela-exames">
+                    <thead>
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Exame</th>
+                            <th>Data</th>
+                            <th>Situação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+
+            <section id="exames-imagens">
+                <h3>Imagens médicas</h3>
+                <form id="formulario-envio-imagem">
+                    <p>
+                        <label for="imagem-paciente">Paciente</label>
+                        <select id="imagem-paciente" name="paciente">
+                            <option value="">Selecione</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="imagem-modalidade">Modalidade</label>
+                        <select id="imagem-modalidade" name="modalidade">
+                            <option>Radiografia</option>
+                            <option>Tomografia</option>
+                            <option>Ressonância</option>
+                            <option>Ultrassonografia</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="imagem-arquivo">Arquivo da imagem</label>
+                        <input accept="image/*,.dcm" id="imagem-arquivo" name="arquivo" type="file" />
+                    </p>
+                    <button id="botao-enviar-imagem" type="submit">Enviar imagem</button>
+                </form>
+                <ul id="lista-imagens"></ul>
+            </section>
+
+            <section id="exames-laudos">
+                <form id="formulario-cadastro-laudo">
+                    <fieldset>
+                        <legend>Registrar laudo</legend>
+                        <p>
+                            <label for="laudo-paciente">Paciente</label>
+                            <select id="laudo-paciente" name="paciente" required>
+                                <option value="">Selecione um paciente cadastrado</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label for="laudo-exame">Exame</label>
+                            <input id="laudo-exame" name="exame" required type="text" />
+                        </p>
+                        <p>
+                            <label for="laudo-profissional">Profissional responsável</label>
+                            <input id="laudo-profissional" name="profissional" required type="text" />
+                        </p>
+                        <p>
+                            <label for="laudo-data">Data do laudo</label>
+                            <input id="laudo-data" name="data" required type="date" />
+                        </p>
+                        <p>
+                            <label for="laudo-arquivo">Arquivo do laudo (PDF)</label>
+                            <input accept="application/pdf" id="laudo-arquivo" name="arquivo" type="file" />
+                        </p>
+                    </fieldset>
+                    <button type="submit">Salvar laudo</button>
+                </form>
+
+                <h3>Laudos</h3>
+                <table id="tabela-laudos">
+                    <thead>
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Exame</th>
+                            <th>Profissional responsável</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+
+            <section id="exames-prescricoes">
+                <h3>Prescrições</h3>
+                <form id="formulario-prescricao">
+                    <p>
+                        <label for="prescricao-paciente">Paciente</label>
+                        <select id="prescricao-paciente" name="paciente" required>
+                            <option value="">Selecione</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="prescricao-texto">Conteúdo da prescrição</label>
+                        <textarea id="prescricao-texto" name="texto" required></textarea>
+                    </p>
+                    <p>
+                        <label for="prescricao-validade">Validade</label>
+                        <input id="prescricao-validade" name="validade" type="date" />
+                    </p>
+                    <button id="botao-registrar-prescricao" type="submit">Registrar prescrição</button>
+                </form>
+
+                <table id="tabela-prescricoes">
+                    <thead>
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Prescrição</th>
+                            <th>Data</th>
+                            <th>Validade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </section>
+
+        <!-- 5. REDE DE CUIDADO FAMILIAR -->
+        <section id="secao-rede-cuidado-familiar">
+            <h2>Rede de Cuidado Familiar</h2>
+            <aside id="aviso-compartilhamento">
+                <p>
+                    O compartilhamento de informações médicas só ocorre dentro das permissões
+                    concedidas pelo paciente. O acesso pode ser alterado ou revogado.
+                </p>
+            </aside>
+
+            <section id="familiares-cadastro">
+                <h3>Cadastro de familiar</h3>
+                <form id="formulario-cadastro-familiar">
+                    <p>
+                        <label for="familiar-paciente">Paciente vinculado</label>
+                        <select id="familiar-paciente" name="paciente" required>
+                            <option value="">Selecione</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="familiar-nome">Nome do familiar</label>
+                        <input id="familiar-nome" name="nome" required type="text" />
+                    </p>
+                    <p>
+                        <label for="familiar-parentesco">Parentesco</label>
+                        <select id="familiar-parentesco" name="parentesco" required>
+                            <option value="">Selecione</option>
+                            <option>Pai ou mãe</option>
+                            <option>Filho(a)</option>
+                            <option>Cônjuge</option>
+                            <option>Irmão(ã)</option>
+                            <option>Responsável legal</option>
+                            <option>Outro</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="familiar-telefone">Telefone</label>
+                        <input id="familiar-telefone" name="telefone" required type="tel" />
+                    </p>
+                    <p>
+                        <label for="familiar-email">E-mail</label>
+                        <input id="familiar-email" name="email" type="email" />
+                    </p>
+
+                    <fieldset id="permissoes-compartilhamento">
+                        <legend>Permissões de compartilhamento</legend>
+                        <p><input id="permissao-dados-cadastrais" name="permissoes" type="checkbox"
+                                value="dados-cadastrais" /><label for="permissao-dados-cadastrais">Dados
+                                cadastrais</label></p>
+                        <p><input id="permissao-historico" name="permissoes" type="checkbox" value="historico" /><label
+                                for="permissao-historico">Histórico médico</label></p>
+                        <p><input id="permissao-exames" name="permissoes" type="checkbox" value="exames" /><label
+                                for="permissao-exames">Exames e laudos</label></p>
+                        <p><input id="permissao-prescricoes" name="permissoes" type="checkbox"
+                                value="prescricoes" /><label for="permissao-prescricoes">Prescrições</label></p>
+                        <p><input id="permissao-classificacao" name="permissoes" type="checkbox"
+                                value="classificacao-risco" /><label for="permissao-classificacao">Classificação de
+                                risco</label></p>
+                        <p><input id="permissao-notificacoes" name="permissoes" type="checkbox"
+                                value="notificacoes" /><label for="permissao-notificacoes">Receber notificações</label>
+                        </p>
+                    </fieldset>
+
+                    <p>
+                        <label for="familiar-validade-permissao">Validade das permissões</label>
+                        <input id="familiar-validade-permissao" name="validade" type="date" />
+                    </p>
+                    <p>
+                        <input id="familiar-consentimento-paciente" name="consentimento" required type="checkbox" />
+                        <label for="familiar-consentimento-paciente">O paciente confirmou e autorizou as permissões
+                            acima.</label>
+                    </p>
+                    <button id="botao-salvar-familiar" type="submit">Salvar familiar</button>
+                </form>
+            </section>
+
+            <section id="familiares-lista">
+                <h3>Familiares cadastrados</h3>
+                <table id="tabela-familiares">
+                    <thead>
+                        <tr>
+                            <th>Familiar</th>
+                            <th>Parentesco</th>
+                            <th>Telefone</th>
+                            <th>Permissões</th>
+                            <th>Validade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </section>
+
+        <!-- 6. CLASSIFICAÇÃO DE RISCO -->
+        <section id="secao-classificacao-risco">
+            <h2>Classificação de risco</h2>
+            <p>Protocolo de Manchester — registro da avaliação realizada por profissional capacitado.</p>
+
+            <aside id="aviso-classificacao-risco">
+                <ul>
+                    <li>A classificação deve ser registrada por profissional capacitado.</li>
+                    <li>O sistema não determina automaticamente a categoria.</li>
+                    <li>Uma nova avaliação deve ser realizada em cada atendimento.</li>
+                    <li>A classificação não define automaticamente a prioridade dos exames.</li>
+                </ul>
+            </aside>
+
+            <section id="classificacao-referencia">
+                <h3>Categorias do Protocolo de Manchester</h3>
+                <table id="tabela-categorias-manchester">
+                    <thead>
+                        <tr>
+                            <th>Categoria</th>
+                            <th>Nível</th>
+                            <th>Denominação</th>
+                            <th>Tempo-alvo de referência</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Vermelho</td>
+                            <td>1</td>
+                            <td>Emergência</td>
+                            <td>Atendimento imediato</td>
+                        </tr>
+                        <tr>
+                            <td>Laranja</td>
+                            <td>2</td>
+                            <td>Muito urgente</td>
+                            <td>Até 10 minutos</td>
+                        </tr>
+                        <tr>
+                            <td>Amarelo</td>
+                            <td>3</td>
+                            <td>Urgente</td>
+                            <td>Até 60 minutos</td>
+                        </tr>
+                        <tr>
+                            <td>Verde</td>
+                            <td>4</td>
+                            <td>Pouco urgente</td>
+                            <td>Até 120 minutos</td>
+                        </tr>
+                        <tr>
+                            <td>Azul</td>
+                            <td>5</td>
+                            <td>Não urgente</td>
+                            <td>Até 240 minutos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="classificacao-registro">
+                <h3>Registrar classificação</h3>
+                <form id="formulario-classificacao-risco">
+                    <p>
+                        <label for="risco-paciente">Paciente</label>
+                        <select id="risco-paciente" name="paciente" required>
+                            <option value="">Selecione</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="risco-data-hora">Data e hora da avaliação</label>
+                        <input id="risco-data-hora" name="data-hora" required type="datetime-local" />
+                    </p>
+                    <p>
+                        <label for="risco-queixa">Queixa principal</label>
+                        <textarea id="risco-queixa" name="queixa" required></textarea>
+                    </p>
+                    <p>
+                        <label for="risco-fluxograma">Fluxograma de apresentação</label>
+                        <select id="risco-fluxograma" name="fluxograma">
+                            <option value="">Selecione</option>
+                            <option>Dor torácica</option>
+                            <option>Dor abdominal em adultos</option>
+                            <option>Cefaleia</option>
+                            <option>Dificuldade respiratória</option>
+                            <option>Mal-estar em adulto</option>
+                            <option>Outro fluxograma</option>
+                        </select>
+                    </p>
+
+                    <fieldset id="risco-sinais-vitais">
+                        <legend>Sinais vitais</legend>
+                        <p><label for="risco-pressao">Pressão arterial</label><input id="risco-pressao" name="pressao"
+                                placeholder="000/00" type="text" /></p>
+                        <p><label for="risco-frequencia-cardiaca">Frequência cardíaca (bpm)</label><input
+                                id="risco-frequencia-cardiaca" min="0" name="fc" type="number" /></p>
+                        <p><label for="risco-frequencia-respiratoria">Frequência respiratória (irpm)</label><input
+                                id="risco-frequencia-respiratoria" min="0" name="fr" type="number" /></p>
+                        <p><label for="risco-temperatura">Temperatura (°C)</label><input id="risco-temperatura"
+                                name="temperatura" step="0.1" type="number" /></p>
+                        <p><label for="risco-saturacao">Saturação de oxigênio (%)</label><input id="risco-saturacao"
+                                max="100" min="0" name="spo2" type="number" /></p>
+                    </fieldset>
+
+                    <fieldset id="risco-categoria">
+                        <legend>Categoria atribuída pelo profissional</legend>
+                        <p><input id="risco-vermelho" name="categoria" required type="radio" value="vermelho" /><label
+                                for="risco-vermelho">Vermelho — Emergência</label></p>
+                        <p><input id="risco-laranja" name="categoria" type="radio" value="laranja" /><label
+                                for="risco-laranja">Laranja — Muito urgente</label></p>
+                        <p><input id="risco-amarelo" name="categoria" type="radio" value="amarelo" /><label
+                                for="risco-amarelo">Amarelo — Urgente</label></p>
+                        <p><input id="risco-verde" name="categoria" type="radio" value="verde" /><label
+                                for="risco-verde">Verde — Pouco urgente</label></p>
+                        <p><input id="risco-azul" name="categoria" type="radio" value="azul" /><label
+                                for="risco-azul">Azul — Não urgente</label></p>
+                    </fieldset>
+
+                    <p>
+                        <label for="risco-justificativa">Justificativa e discriminadores observados</label>
+                        <textarea id="risco-justificativa" name="justificativa" required></textarea>
+                    </p>
+
+                    <fieldset id="risco-profissional-responsavel">
+                        <legend>Profissional responsável</legend>
+                        <p><label for="risco-profissional-nome">Nome</label><input id="risco-profissional-nome"
+                                name="profissional" required type="text" /></p>
+                        <p><label for="risco-profissional-registro">Registro no conselho profissional</label><input
+                                id="risco-profissional-registro" name="registro" required type="text" /></p>
+                        <p><input id="risco-confirmacao-capacitacao" name="capacitacao" required
+                                type="checkbox" /><label for="risco-confirmacao-capacitacao">Confirmo que sou
+                                profissional capacitado para realizar a classificação de risco.</label></p>
+                    </fieldset>
+
+                    <button id="botao-registrar-classificacao" type="submit">Registrar classificação</button>
+                    <button id="botao-limpar-classificacao" type="reset">Limpar formulário</button>
+                </form>
+            </section>
+
+            <section id="classificacao-historico">
+                <h3>Classificações recentes</h3>
+                <table id="tabela-classificacoes-recentes">
+                    <thead>
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Categoria</th>
+                            <th>Data e hora</th>
+                            <th>Profissional</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </section>
+
+        <!-- 7. PROFISSIONAIS DE SAÚDE -->
+        <section id="secao-profissionais">
+            <h2>Profissionais de saúde</h2>
+
+            <section id="profissionais-cadastro">
+                <h3>Cadastro de profissional</h3>
+                <form id="formulario-cadastro-profissional">
+                    <p><label for="profissional-nome">Nome completo</label><input id="profissional-nome" name="nome"
+                            required type="text" /></p>
+                    <p>
+                        <label for="profissional-categoria">Categoria profissional</label>
+                        <select id="profissional-categoria" name="categoria" required>
+                            <option value="">Selecione</option>
+                            <option>Médico(a)</option>
+                            <option>Enfermeiro(a)</option>
+                            <option>Técnico(a) de enfermagem</option>
+                            <option>Farmacêutico(a)</option>
+                            <option>Biomédico(a)</option>
+                            <option>Outro</option>
+                        </select>
+                    </p>
+                    <p><label for="profissional-conselho">Conselho profissional</label><input id="profissional-conselho"
+                            name="conselho" required type="text" /></p>
+                    <p><label for="profissional-registro">Número de registro</label><input id="profissional-registro"
+                            name="registro" required type="text" /></p>
+                    <p><label for="profissional-uf">UF do registro</label><input id="profissional-uf" maxlength="2"
+                            name="uf" required type="text" /></p>
+                    <p><label for="profissional-especialidade">Especialidade</label><input
+                            id="profissional-especialidade" name="especialidade" type="text" /></p>
+                    <p>
+                        <label for="profissional-instituicao">Instituição vinculada</label>
+                        <select id="profissional-instituicao" name="instituicao">
+                            <option value="">Selecione</option>
+                        </select>
+                    </p>
+                    <p><label for="profissional-email">E-mail</label><input id="profissional-email" name="email"
+                            required type="email" /></p>
+                    <p><label for="profissional-telefone">Telefone</label><input id="profissional-telefone"
+                            name="telefone" type="tel" /></p>
+                    <p><input id="profissional-habilitado-classificacao" name="habilitado-classificacao"
+                            type="checkbox" /><label for="profissional-habilitado-classificacao">Capacitado para
+                            classificação de risco (Protocolo de Manchester)</label></p>
+                    <p><label for="profissional-comprovante-capacitacao">Comprovante de capacitação</label><input
+                            accept=".pdf,image/*" id="profissional-comprovante-capacitacao" name="comprovante"
+                            type="file" /></p>
+                    <button id="botao-salvar-profissional" type="submit">Salvar profissional</button>
+                    <button id="botao-limpar-profissional" type="reset">Limpar formulário</button>
+                </form>
+            </section>
+
+            <section id="profissionais-consulta">
+                <h3>Consulta de profissionais</h3>
+                <form id="formulario-consulta-profissional">
+                    <p><label for="consulta-profissional-termo">Nome ou número de registro</label><input
+                            id="consulta-profissional-termo" name="termo" type="search" /></p>
+                    <button id="botao-buscar-profissional" type="submit">Buscar</button>
+                </form>
+                <table id="tabela-profissionais">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Registro</th>
+                            <th>Instituição</th>
+                            <th>Classificação de risco</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </section>
+
+        <!-- 8. INSTITUIÇÕES -->
+        <section id="secao-instituicoes">
+            <h2>Hospitais, clínicas e laboratórios</h2>
+
+            <section id="instituicoes-cadastro">
+                <h3>Cadastro de instituição</h3>
+                <form id="formulario-cadastro-instituicao">
+                    <p>
+                        <label for="instituicao-tipo">Tipo</label>
+                        <select id="instituicao-tipo" name="tipo" required>
+                            <option value="">Selecione</option>
+                            <option value="hospital">Hospital</option>
+                            <option value="clinica">Clínica</option>
+                            <option value="laboratorio">Laboratório</option>
+                        </select>
+                    </p>
+                    <p><label for="instituicao-nome">Nome</label><input id="instituicao-nome" name="nome" required
+                            type="text" /></p>
+                    <p><label for="instituicao-cnpj">CNPJ</label><input id="instituicao-cnpj" name="cnpj" required
+                            type="text" /></p>
+                    <p><label for="instituicao-cnes">Código CNES</label><input id="instituicao-cnes" name="cnes"
+                            type="text" /></p>
+                    <p><label for="instituicao-endereco">Endereço</label><input id="instituicao-endereco"
+                            name="endereco" type="text" /></p>
+                    <p><label for="instituicao-cidade">Cidade</label><input id="instituicao-cidade" name="cidade"
+                            type="text" /></p>
+                    <p><label for="instituicao-uf">UF</label><input id="instituicao-uf" maxlength="2" name="uf"
+                            type="text" /></p>
+                    <p><label for="instituicao-telefone">Telefone</label><input id="instituicao-telefone"
+                            name="telefone" type="tel" /></p>
+                    <p><label for="instituicao-email">E-mail</label><input id="instituicao-email" name="email"
+                            type="email" /></p>
+                    <p><label for="instituicao-responsavel-tecnico">Responsável técnico</label><input
+                            id="instituicao-responsavel-tecnico" name="responsavel-tecnico" type="text" /></p>
+
+                    <fieldset id="instituicao-servicos">
+                        <legend>Serviços oferecidos</legend>
+                        <p><input id="servico-urgencia" name="servicos" type="checkbox" value="urgencia" /><label
+                                for="servico-urgencia">Urgência e emergência</label></p>
+                        <p><input id="servico-consultas" name="servicos" type="checkbox" value="consultas" /><label
+                                for="servico-consultas">Consultas</label></p>
+                        <p><input id="servico-exames-laboratoriais" name="servicos" type="checkbox"
+                                value="exames-laboratoriais" /><label for="servico-exames-laboratoriais">Exames
+                                laboratoriais</label></p>
+                        <p><input id="servico-exames-imagem" name="servicos" type="checkbox"
+                                value="exames-imagem" /><label for="servico-exames-imagem">Exames de imagem</label></p>
+                    </fieldset>
+
+                    <button id="botao-salvar-instituicao" type="submit">Salvar instituição</button>
+                    <button id="botao-limpar-instituicao" type="reset">Limpar formulário</button>
+                </form>
+            </section>
+
+            <section id="instituicoes-consulta">
+                <h3>Consulta de instituições</h3>
+                <form id="formulario-consulta-instituicao">
+                    <p><label for="consulta-instituicao-termo">Nome ou CNPJ</label><input
+                            id="consulta-instituicao-termo" name="termo" type="search" /></p>
+                    <p>
+                        <label for="consulta-instituicao-tipo">Tipo</label>
+                        <select id="consulta-instituicao-tipo" name="tipo">
+                            <option value="">Todos</option>
+                            <option value="hospital">Hospital</option>
+                            <option value="clinica">Clínica</option>
+                            <option value="laboratorio">Laboratório</option>
+                        </select>
+                    </p>
+                    <button id="botao-buscar-instituicao" type="submit">Buscar</button>
+                </form>
+                <table id="tabela-instituicoes">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Cidade/UF</th>
+                            <th>Telefone</th>
+                            <th>Situação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </section>
+
+        <!-- 9. NOTIFICAÇÕES -->
+        <section id="secao-notificacoes">
+            <h2>Notificações</h2>
+            <form id="formulario-filtro-notificacoes">
+                <p>
+                    <label for="filtro-notificacao-tipo">Tipo</label>
+                    <select id="filtro-notificacao-tipo" name="tipo">
+                        <option value="">Todas</option>
+                        <option value="exames">Exames</option>
+                        <option value="laudos">Laudos</option>
+                        <option value="permissoes">Permissões</option>
+                        <option value="classificacao de risco">Classificação de risco</option>
+                        <option value="geral">Sistema</option>
+                    </select>
+                </p>
+                <p>
+                    <label for="filtro-notificacao-situacao">Situação</label>
+                    <select id="filtro-notificacao-situacao" name="situacao">
+                        <option value="">Todas</option>
+                        <option value="não lidas">Não lidas</option>
+                        <option value="lidas">Lidas</option>
+                    </select>
+                </p>
+                <button id="botao-filtrar-notificacoes" type="submit">Filtrar</button>
+                <button id="botao-marcar-todas-lidas" type="button">Marcar todas como lidas</button>
+            </form>
+            <ul id="lista-notificacoes"></ul>
+        </section>
+
+        <!-- 10. CONFIGURAÇÕES E PERFIL -->
+        <section id="secao-configuracoes-perfil">
+            <h2>Configurações e perfil do usuário</h2>
+
+            <section id="configuracoes-perfil">
+                <h3>Perfil</h3>
+                <form id="formulario-perfil-usuario">
+                    <p><label for="perfil-nome">Nome completo</label><input id="perfil-nome" name="nome" type="text" />
+                    </p>
+                    <p><label for="perfil-email">E-mail</label><input id="perfil-email" name="email" type="email" /></p>
+                    <p><label for="perfil-telefone">Telefone</label><input id="perfil-telefone" name="telefone"
+                            type="tel" /></p>
+                    <p>
+                        <label for="perfil-tipo-acesso">Perfil de acesso</label>
+                        <select id="perfil-tipo-acesso" name="tipo-acesso" disabled>
+                            <option>Profissional de saúde</option>
+                        </select>
+                    </p>
+                    <p><label for="perfil-foto">Foto de perfil</label><input accept="image/*" id="perfil-foto"
+                            name="foto" type="file" /></p>
+                    <button id="botao-salvar-perfil" type="submit">Salvar perfil</button>
+                </form>
+            </section>
+
+            <section id="configuracoes-seguranca">
+                <h3>Segurança</h3>
+                <form id="formulario-alterar-senha">
+                    <p><label for="senha-atual">Senha atual</label><input autocomplete="current-password"
+                            id="senha-atual" name="senha-atual" required type="password" /></p>
+                    <p><label for="senha-nova">Nova senha</label><input autocomplete="new-password" id="senha-nova"
+                            name="senha-nova" required type="password" /></p>
+                    <p><label for="senha-confirmacao">Confirmar nova senha</label><input autocomplete="new-password"
+                            id="senha-confirmacao" name="senha-confirmacao" required type="password" /></p>
+                    <button id="botao-alterar-senha" type="submit">Alterar senha</button>
+                </form>
+            </section>
+
+            <section id="configuracoes-preferencias">
+                <h3>Preferências de notificação e privacidade</h3>
+                <form id="formulario-preferencias">
+                    <fieldset>
+                        <legend>Receber notificações sobre</legend>
+                        <p><input checked id="preferencia-exames" name="notificar" type="checkbox"
+                                value="exames" /><label for="preferencia-exames">Exames e laudos</label></p>
+                        <p><input checked id="preferencia-permissoes" name="notificar" type="checkbox"
+                                value="permissoes" /><label for="preferencia-permissoes">Alterações de
+                                permissões</label></p>
+                        <p><input id="preferencia-sistema" name="notificar" type="checkbox" value="sistema" /><label
+                                for="preferencia-sistema">Avisos do sistema</label></p>
+                    </fieldset>
+                    <p>
+                        <label for="preferencia-idioma">Idioma</label>
+                        <select id="preferencia-idioma" name="idioma">
+                            <option value="pt-BR">Português (Brasil)</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </p>
+                    <button id="botao-salvar-preferencias" type="submit">Salvar preferências</button>
+                </form>
+            </section>
+        </section>
+    </main>
+
+    <footer id="rodape-principal">
+        <p>ConectaSaúde — Plataforma de integração. Protótipo local para testes.</p>
+        <nav aria-label="Links institucionais" id="menu-rodape">
+            <ul>
+                <li><a href="#politica-privacidade">Política de privacidade</a></li>
+                <li><a href="#termos-uso">Termos de uso</a></li>
+                <li><a href="#contato-suporte">Contato e suporte</a></li>
+            </ul>
+        </nav>
+    </footer>
+</body>
+
+</html>

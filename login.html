@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Acesse a plataforma Conecta com seu e-mail e senha.">
+  <title>Entrar | Conecta</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+  <main id="pagina-login">
+
+    <!-- Painel da marca -->
+    <section id="painel-marca" aria-label="Sobre a plataforma">
+      <h1 id="nome-plataforma">Conecta</h1>
+      <p id="slogan-plataforma">Integração entre hospitais, clínicas, laboratórios, profissionais, pacientes e familiares.</p>
+      <ul id="lista-beneficios">
+        <li>Histórico médico, exames e laudos em um só lugar</li>
+        <li>Compartilhamento com a família somente com a permissão do paciente</li>
+        <li>Classificação de risco registrada por profissionais capacitados</li>
+      </ul>
+    </section>
+
+
+    <section id="painel-login" aria-labelledby="titulo-login">
+      <form id="formulario-login" action="index.html" method="get">
+        <h2 id="titulo-login">Entrar na sua conta</h2>
+        <p id="descricao-login">Use o e-mail e a senha do seu cadastro.</p>
+
+        <p>
+          <label for="login-perfil">Entrar como</label>
+          <select id="login-perfil" name="perfil" required>
+            <option value="profissional">Doutor(a)</option>
+            <option value="paciente">Paciente</option>
+            <option value="administrador">Administrador da instituição</option>
+          </select>
+        </p>
+
+        <p>
+          <label for="login-email">E-mail</label>
+          <input type="email" id="login-email" name="email" autocomplete="username" required>
+        </p>
+
+        <p>
+          <label for="login-senha">Senha</label>
+          <input type="password" id="login-senha" autocomplete="current-password" required>
+        </p>
+
+        <p class="linha-opcoes">
+          <span class="campo-checkbox">
+            <input type="checkbox" id="login-manter" name="manter">
+            <label for="login-manter">Manter conectado</label>
+          </span>
+          <a id="link-recuperar-senha" href="#recuperar-senha">Esqueci minha senha</a>
+        </p>
+
+        <button type="submit" id="botao-entrar">Entrar</button>
+
+        <p id="link-primeiro-acesso">Primeiro acesso? <a href="#cadastro">Criar conta</a></p>
+      </form>
+
+      <footer id="rodape-login">
+        <p>Ambiente de demonstração: todos os dados são .</p>
+        <p>Seus dados são tratados conforme a LGPD.</p>
+      </footer>
+    </section>
+
+  </main>
+</body>
+</html>
